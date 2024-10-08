@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: scraping-service
+  datasource:
+    username: user
+    password: password
+    url: jdbc:mysql://localhost:3306/polardb_movie
