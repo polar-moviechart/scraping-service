@@ -29,6 +29,12 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	// Selenium WebDriver 의존성
+	implementation 'org.seleniumhq.selenium:selenium-java:4.12.1'
+	// WebDriverManager 의존성
+	implementation 'io.github.bonigarcia:webdrivermanager:5.5.0'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
