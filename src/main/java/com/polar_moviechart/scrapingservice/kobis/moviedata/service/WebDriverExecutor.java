@@ -79,4 +79,24 @@ public class WebDriverExecutor {
         movieInfoLink.click();
         return driver.findElement(By.cssSelector("div[tabindex='-1'"));
     }
+
+    public void getMovieDetailInfo(WebElement movieDetailPage, MovieBasicInfoDto basicInfo) {
+        // 영화를 클릭하면 나오는 상세 정보 템플릿에서 영화 메타데이터 가져오기
+        String titleEnglish = movieDetailPage.findElement(By.cssSelector("div.hd_layer > div"))
+                .getText()
+                .replace("영화상영관상영중", "")
+                .trim();
+        String title = basicInfo.getTitle() + " " + titleEnglish;
+
+        WebElement movieInfo = movieDetailPage.findElement(By.cssSelector("dl.ovf"));
+        String synopsys = movieDetailPage.findElement(By.cssSelector("p.desc_info")).getText();
+
+        List<WebElement> metadata = movieInfo.findElements(By.cssSelector("dt, dd"));
+        String code = metadata.get(1).getText();
+        String movieDetails = metadata.get(7).getText();
+        String releaseDate = metadata.get(11).getText();
+        String productionYear = metadata.get(13).getText();
+
+
+    }
 }
