@@ -1,11 +1,11 @@
 package com.polar_moviechart.scrapingservice.kobis.moviedata.service;
 
+import com.polar_moviechart.scrapingservice.utls.WebDriverExecutorUtils;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,25 +47,22 @@ public class WebDriverExecutor {
 
         // 시작 날짜 입력 필드 찾기
         WebElement searchStartDate = driver.findElement(By.cssSelector("div.tf_comm > input#sSearchFrom"));
-        // 기존 입력 내용 삭제 (BACK_SPACE로 입력된 날짜 삭제)
-        for (int i = 0; i < 8; i++) {
-            searchStartDate.sendKeys(Keys.BACK_SPACE);
-        }
-        // 새로운 날짜 입력
-        searchStartDate.sendKeys(formattedDate);
+        WebElement searchEndtDate = driver.findElement(By.cssSelector("div.tf_comm > input#sSearchTo"));
+        trimDateInput(searchStartDate, 8);
+        trimDateInput(searchEndtDate, 8);
 
-        // 종료 날짜 입력 필드 찾기
-        searchStartDate = driver.findElement(By.cssSelector("div.tf_comm > input#sSearchTo"));
-        // 기존 입력 내용 삭제
-        for (int i = 0; i < 8; i++) {
-            searchStartDate.sendKeys(Keys.BACK_SPACE);
-        }
         // 새로운 날짜 입력
         searchStartDate.sendKeys(formattedDate);
+        searchEndtDate.sendKeys(formattedDate);
 
         // ESC 키를 눌러서 날짜 선택 창 닫기
-        Actions action = new Actions(driver);
-        action.sendKeys(Keys.ESCAPE).perform();
+        WebDriverExecutorUtils.doEsc(driver);
+    }
+
+    private void trimDateInput(WebElement webElement, int trimCount) {
+        for (int i = 0; i < trimCount; i++) {
+            webElement.sendKeys(Keys.BACK_SPACE);
+        }
     }
 
     public void initDriver() {
@@ -74,5 +71,12 @@ public class WebDriverExecutor {
 
     public List<WebElement> getColumnInfo(WebElement row) {
         return row.findElements(By.tagName("td"));
+    }
+
+    public WebElement moveToMovieDetailPage(WebElement row) {
+        WebElement secondTd = row.findElements(By.tagName("td")).get(1);
+        WebElement movieInfoLink = secondTd.findElement(By.cssSelector("span.ellip.per90 > a"));
+        movieInfoLink.click();
+        return driver.findElement(By.cssSelector("div[tabindex='-1'"));
     }
 }
