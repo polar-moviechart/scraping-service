@@ -23,7 +23,7 @@ public class ScrapingService {
             List<WebElement> columnInfo = webDriverExecutor.getColumnInfo(row);
             MovieBasicInfoDto basicMovieInfo = dataExtractor.getMovieInfo(columnInfo);
             WebElement movieDetailPage = webDriverExecutor.moveToMovieDetailPage(row);
-            webDriverExecutor.getMovieDetailInfo(movieDetailPage, basicMovieInfo);
+            dataExtractor.getMovieDetailInfo(movieDetailPage, basicMovieInfo);
         }
     }
 
