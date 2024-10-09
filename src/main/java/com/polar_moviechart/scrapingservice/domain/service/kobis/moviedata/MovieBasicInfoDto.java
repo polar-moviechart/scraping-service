@@ -1,4 +1,4 @@
-package com.polar_moviechart.scrapingservice.kobis.moviedata.service;
+package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata;
 
 import lombok.Getter;
 
