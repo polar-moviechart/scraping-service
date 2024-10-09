@@ -1,9 +1,9 @@
 package com.polar_moviechart.scrapingservice.utls;
 
-public class ScrapingUtils {
+public class DataExtractUtils {
 
     // private 생성자를 추가하여 인스턴스 생성을 방지
-    private ScrapingUtils() {
+    private DataExtractUtils() {
         throw new UnsupportedOperationException("Utility class cannot be instantiated");
     }
 
