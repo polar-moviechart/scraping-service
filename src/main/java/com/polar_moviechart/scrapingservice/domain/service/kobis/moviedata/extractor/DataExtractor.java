@@ -18,10 +18,6 @@ public class DataExtractor {
     private final DirectorExtractor directorExtractor;
     private final LeadActorExtractor leadActorExtractor;
 
-    public static Pattern getCodePattern() {
-        return Pattern.compile("mstView\\('people','(\\d+)'\\);");
-    }
-
     public MovieInfoDto getMovieInfo(WebElement movieDetailPage, MovieDailyStatsDto movieDailyStatsDto) {
         return movieExtractor.getMovieInfo(movieDetailPage, movieDailyStatsDto);
     }
