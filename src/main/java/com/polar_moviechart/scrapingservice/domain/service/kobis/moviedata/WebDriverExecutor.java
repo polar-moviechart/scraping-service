@@ -41,6 +41,29 @@ public class WebDriverExecutor {
         return movieTable.findElements(By.tagName("tr"));
     }
 
+    public List<WebElement> getStaffElement(WebElement movieDetailPage, Integer movieCode) {
+        // 코드 아이디로 감독, 배우 정보가 있는 staff 관련 태그 얻어내기
+        String staffId = movieCode + "_staff";
+        WebElement staffInfo = movieDetailPage.findElement(By.id(staffId));
+        WebElement descriptionInfo = staffInfo.findElement(By.cssSelector("dl.desc_info"));
+        return descriptionInfo.findElements(By.cssSelector("div"));
+    }
+
+    public void initDriver() {
+        WebDriverManager.chromedriver().setup();
+    }
+
+    public List<WebElement> getColumnInfo(WebElement row) {
+        return row.findElements(By.tagName("td"));
+    }
+
+    public WebElement moveToMovieDetailPage(WebElement row) {
+        WebElement secondTd = row.findElements(By.tagName("td")).get(1);
+        WebElement movieInfoLink = secondTd.findElement(By.cssSelector("span.ellip.per90 > a"));
+        movieInfoLink.click();
+        return driver.findElement(By.cssSelector("div[tabindex='-1'"));
+    }
+
     private void typeToDriver(String targetDate) {
         // 타겟 날짜 포맷 변경 (예시로 2번째 인덱스부터 사용)
         String formattedDate = targetDate.substring(2);
@@ -63,20 +86,5 @@ public class WebDriverExecutor {
         for (int i = 0; i < trimCount; i++) {
             webElement.sendKeys(Keys.BACK_SPACE);
         }
-    }
-
-    public void initDriver() {
-        WebDriverManager.chromedriver().setup();
-    }
-
-    public List<WebElement> getColumnInfo(WebElement row) {
-        return row.findElements(By.tagName("td"));
-    }
-
-    public WebElement moveToMovieDetailPage(WebElement row) {
-        WebElement secondTd = row.findElements(By.tagName("td")).get(1);
-        WebElement movieInfoLink = secondTd.findElement(By.cssSelector("span.ellip.per90 > a"));
-        movieInfoLink.click();
-        return driver.findElement(By.cssSelector("div[tabindex='-1'"));
     }
 }

@@ -4,7 +4,7 @@ import org.openqa.selenium.WebElement;
 
 public class LeadActorExtractor {
 
-    public void getDirectorsInfo(WebElement movieDetailPage) {
+    public void getLeadActorsInfo(WebElement leadActorsElement, int movieCode) {
 
     }
 }
