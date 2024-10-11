@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class DirectorExtractor {
 
-    public List<DirectorInfoDto> getDirectorsInfo(WebElement directorsElement, int movieCode) {
+    public List<DirectorInfoDto> getDirectorsInfo(WebElement directorsElement) {
         List<WebElement> directorsInfo = directorsElement.findElements(By.cssSelector("dd"));
 
         Pattern pattern = Pattern.compile("mstView\\('people','(\\d+)'\\);");

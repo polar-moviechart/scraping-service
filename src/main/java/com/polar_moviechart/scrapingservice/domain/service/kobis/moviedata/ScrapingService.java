@@ -44,14 +44,13 @@ public class ScrapingService {
                 movieCommandService.save(movieInfoDto);
 
                 List<WebElement> staffElement = webDriverExecutor.getStaffElement(movieDetailPage, movieCode);
-                List<DirectorInfoDto> directorsDto = dataExtractor.getDirectorsInfo(staffElement.get(0), movieCode);
+                List<DirectorInfoDto> directorsDto = dataExtractor.getDirectorsInfo(staffElement.get(0));
                 for (DirectorInfoDto directorDto : directorsDto) {
                     if (!directorQueryService.isExists(directorDto.getCode())) {
                         directorCommandService.save(directorDto);
                         movieDirectorCommandService.save(movieCode, directorDto.getCode());
                     }
                 }
-
 
             }
             movieDailyStatsCommandService.save(movieDailyStatsDto, DataExtractUtils.convertToLocalDate(targetDate));

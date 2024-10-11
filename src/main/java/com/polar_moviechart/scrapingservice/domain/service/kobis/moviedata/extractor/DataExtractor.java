@@ -24,11 +24,11 @@ public class DataExtractor {
         return movieDailyStatsExtractor.getMovieDailyStatsInfo(columns);
     }
 
-    public List<DirectorInfoDto> getDirectorsInfo(WebElement directorsElement, int movieCode) {
-        return directorExtractor.getDirectorsInfo(directorsElement, movieCode);
+    public List<DirectorInfoDto> getDirectorsInfo(WebElement directorsElement) {
+        return directorExtractor.getDirectorsInfo(directorsElement);
     }
 
-    public void getLeadActorsInfo(WebElement leadActorsElement, int movieCode) {
+    public void getLeadActorsInfo(WebElement leadActorsElement) {
 
     }
 }
