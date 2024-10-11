@@ -24,9 +24,12 @@ public class ScrapingService {
     private final MovieRepository movieRepository;
     private MovieDirectorCommandService movieDirectorCommandService;
     private DirectorCommandService directorCommandService;
+    private LeadActorQueryService leadActorQueryService;
+    private LeadActorCommandService leadActorCommandService;
+    private MovieLeadActorCommandService movieLeadActorCommandService;
 
     @Transactional
-    private void doScrape(String targetDate) {
+    public void doScrape(String targetDate) {
         webDriverExecutor.navigateToPage(targetDate);
         // 더 보기 버튼 클릭
         webDriverExecutor.clickMoreButton();
@@ -49,6 +52,13 @@ public class ScrapingService {
                     if (!directorQueryService.isExists(directorDto.getCode())) {
                         directorCommandService.save(directorDto);
                         movieDirectorCommandService.save(movieCode, directorDto.getCode());
+                    }
+                }
+                List<LeadActorInfoDto> leadActorsDto = dataExtractor.getLeadActorsInfo(staffElement.get(1));
+                for (LeadActorInfoDto leadActorDto : leadActorsDto) {
+                    if (!leadActorQueryService.isExists(leadActorDto.getCode())) {
+                        leadActorCommandService.save(leadActorDto);
+                        movieLeadActorCommandService.save(movieCode, leadActorDto.getCode());
                     }
                 }
 
