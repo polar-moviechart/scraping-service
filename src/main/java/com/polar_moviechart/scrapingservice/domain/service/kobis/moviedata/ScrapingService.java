@@ -3,6 +3,7 @@ package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata;
 import com.polar_moviechart.scrapingservice.domain.repository.MovieRepository;
 import com.polar_moviechart.scrapingservice.domain.service.MovieCommandService;
 import com.polar_moviechart.scrapingservice.domain.service.MovieDailyStatsCommandService;
+import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.extractor.DataExtractor;
 import com.polar_moviechart.scrapingservice.utls.DataExtractUtils;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.WebElement;
@@ -37,6 +38,7 @@ public class ScrapingService {
                 MovieInfoDto movieInfoDto = dataExtractor.getMovieInfo(movieDetailPage, movieDailyStatsDto);
                 movieCommandService.save(movieInfoDto);
 
+                dataExtractor.getDirectorsInfo(movieDetailPage);
             }
             movieDailyStatsCommandService.save(movieDailyStatsDto, DataExtractUtils.convertToLocalDate(targetDate));
         }

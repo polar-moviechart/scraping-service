@@ -1,31 +1,15 @@
-package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata;
+package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.extractor;
 
-import com.polar_moviechart.scrapingservice.exception.ScrapingDataNotFoundException;
+import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.MovieDailyStatsDto;
+import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.MovieInfoDto;
 import com.polar_moviechart.scrapingservice.utls.DataExtractUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-@Service
-public class DataExtractor {
-
-    public MovieDailyStatsDto getMovieDailyStatsInfo(List<WebElement> columns) {
-        int rank = DataExtractUtils.convertToInt(columns.get(0).getText());
-        String title = columns.get(1).getText();
-        int sales = DataExtractUtils.convertToInt(columns.get(3).getText());
-        int audience = DataExtractUtils.convertToInt(columns.get(7).getText());
-
-        WebElement linkElement = columns.get(1).findElement(By.cssSelector("a"));
-        String onClickValue = linkElement.getAttribute("onClick");
-        int code = extractMovieCode(onClickValue);
-
-        return new MovieDailyStatsDto(code, rank, title, sales, audience);
-    }
+public class MovieExtractor {
 
     public MovieInfoDto getMovieInfo(WebElement movieDetailPage, MovieDailyStatsDto movieDailyStatsDto) {
         // 영화를 클릭하면 나오는 상세 정보 템플릿에서 영화 메타데이터 가져오기
@@ -57,21 +41,5 @@ public class DataExtractor {
 
     private Integer convertToInteger(String productionYear) {
         return Integer.parseInt(productionYear.replace("년", ""));
-    }
-
-    private int extractMovieCode(String onClickValue) {
-        // 정규 표현식 패턴
-        Pattern pattern = Pattern.compile("mstView\\('movie','(\\d+)'\\)");
-        Matcher matcher = pattern.matcher(onClickValue);
-
-        // 코드 찾기
-        try {
-            if (matcher.find()) {
-                return Integer.parseInt(matcher.group(1));
-            }
-        } catch (Exception e) {
-            throw new ScrapingDataNotFoundException("영화 코드 추출 중 예외 발생.", e);
-        }
-        throw new ScrapingDataNotFoundException("코드를 찾을 수 없습니다.");
     }
 }
