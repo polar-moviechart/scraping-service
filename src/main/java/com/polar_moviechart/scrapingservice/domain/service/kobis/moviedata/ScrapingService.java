@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -21,10 +22,19 @@ public class ScrapingService {
 
         for (WebElement row : movieRows) {
             List<WebElement> columnInfo = webDriverExecutor.getColumnInfo(row);
-            MovieBasicInfoDto basicMovieInfo = dataExtractor.getMovieInfo(columnInfo);
+            MovieDailyStatsDto movieDailyStatsDto = dataExtractor.getMovieDailyStatsInfo(columnInfo);
+
             WebElement movieDetailPage = webDriverExecutor.moveToMovieDetailPage(row);
-            dataExtractor.getMovieDetailInfo(movieDetailPage, basicMovieInfo);
+            dataExtractor.getMovieDetailInfo(movieDetailPage, movieDailyStatsDto);
         }
+    }
+
+    private LocalDate convertToLocalDate(String targetDate) {
+        String[] dateElement = targetDate.split("-");
+        return LocalDate.of(
+                Integer.parseInt(dateElement[0]),
+                Integer.parseInt(dateElement[1]),
+                Integer.parseInt(dateElement[2]));
     }
 
 

@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 @Service
 public class DataExtractor {
 
-    public MovieBasicInfoDto getMovieInfo(List<WebElement> columns) {
+    public MovieDailyStatsDto getMovieDailyStatsInfo(List<WebElement> columns) {
         int rank = DataExtractUtils.convertToInt(columns.get(0).getText());
         String title = columns.get(1).getText();
         int sales = DataExtractUtils.convertToInt(columns.get(3).getText());
@@ -23,18 +23,16 @@ public class DataExtractor {
         String onClickValue = linkElement.getAttribute("onClick");
         int code = extractMovieCode(onClickValue);
 
-        MovieBasicInfoDto movieBasicInfoDto = new MovieBasicInfoDto(code, rank, title, sales, audience);
-
-        return new MovieBasicInfoDto(code, rank, title, sales, audience);
+        return new MovieDailyStatsDto(code, rank, title, sales, audience);
     }
 
-    public void getMovieDetailInfo(WebElement movieDetailPage, MovieBasicInfoDto basicInfo) {
+    public void getMovieDetailInfo(WebElement movieDetailPage, MovieDailyStatsDto movieDailyStatsDto) {
         // 영화를 클릭하면 나오는 상세 정보 템플릿에서 영화 메타데이터 가져오기
         String titleEnglish = movieDetailPage.findElement(By.cssSelector("div.hd_layer > div"))
                 .getText()
                 .replace("영화상영관상영중", "")
                 .trim();
-        String title = basicInfo.getTitle() + " " + titleEnglish;
+        String title = movieDailyStatsDto.getTitle() + " " + titleEnglish;
 
         WebElement movieInfo = movieDetailPage.findElement(By.cssSelector("dl.ovf"));
         String synopsys = movieDetailPage.findElement(By.cssSelector("p.desc_info")).getText();
