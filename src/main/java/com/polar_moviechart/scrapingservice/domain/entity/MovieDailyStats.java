@@ -43,7 +43,7 @@ public class MovieDailyStats {
     @JoinColumn(name = "movie_id")
     private Movie movie;
 
-    public MovieDailyStats(int code, int ranking, int revenue, int audience, LocalDate date) {
+    public MovieDailyStats(int code, int ranking, int revenue, LocalDate date, int audience) {
         this.code = code;
         this.ranking = ranking;
         this.revenue = revenue;

@@ -6,6 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,7 +27,7 @@ public class DataExtractor {
         return new MovieDailyStatsDto(code, rank, title, sales, audience);
     }
 
-    public void getMovieDetailInfo(WebElement movieDetailPage, MovieDailyStatsDto movieDailyStatsDto) {
+    public MovieInfoDto getMovieInfo(WebElement movieDetailPage, MovieDailyStatsDto movieDailyStatsDto) {
         // 영화를 클릭하면 나오는 상세 정보 템플릿에서 영화 메타데이터 가져오기
         String titleEnglish = movieDetailPage.findElement(By.cssSelector("div.hd_layer > div"))
                 .getText()
@@ -36,12 +37,26 @@ public class DataExtractor {
 
         WebElement movieInfo = movieDetailPage.findElement(By.cssSelector("dl.ovf"));
         String synopsys = movieDetailPage.findElement(By.cssSelector("p.desc_info")).getText();
-
         List<WebElement> metadata = movieInfo.findElements(By.cssSelector("dt, dd"));
-        String code = metadata.get(1).getText();
-        String movieDetails = metadata.get(7).getText();
-        String releaseDate = metadata.get(11).getText();
+
+        String codeString = metadata.get(1).getText();
+        String details = metadata.get(7).getText();
+        String releaseDateString = metadata.get(11).getText();
         String productionYear = metadata.get(13).getText();
+        LocalDate releaseDate = DataExtractUtils.convertToLocalDate(releaseDateString);
+
+        return new MovieInfoDto(
+                Integer.parseInt(codeString),
+                title,
+                details,
+                releaseDate,
+                convertToInteger(productionYear),
+                synopsys
+        );
+    }
+
+    private Integer convertToInteger(String productionYear) {
+        return Integer.parseInt(productionYear.replace("년", ""));
     }
 
     private int extractMovieCode(String onClickValue) {

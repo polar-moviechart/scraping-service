@@ -1,11 +1,15 @@
 package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata;
 
+import com.polar_moviechart.scrapingservice.domain.repository.MovieRepository;
+import com.polar_moviechart.scrapingservice.domain.service.MovieCommandService;
+import com.polar_moviechart.scrapingservice.domain.service.MovieDailyStatsCommandService;
+import com.polar_moviechart.scrapingservice.utls.DataExtractUtils;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -13,6 +17,9 @@ public class ScrapingService {
 
     private final WebDriverExecutor webDriverExecutor;
     private final DataExtractor dataExtractor;
+    private final MovieCommandService movieCommandService;
+    private final MovieDailyStatsCommandService movieDailyStatsCommandService;
+    private final MovieRepository movieRepository;
 
     private void doScrape(String targetDate) {
         webDriverExecutor.navigateToPage(targetDate);
@@ -24,18 +31,15 @@ public class ScrapingService {
             List<WebElement> columnInfo = webDriverExecutor.getColumnInfo(row);
             MovieDailyStatsDto movieDailyStatsDto = dataExtractor.getMovieDailyStatsInfo(columnInfo);
 
-            WebElement movieDetailPage = webDriverExecutor.moveToMovieDetailPage(row);
-            dataExtractor.getMovieDetailInfo(movieDetailPage, movieDailyStatsDto);
+            Optional<Long> codeOptional = movieRepository.findByCode(movieDailyStatsDto.getCode());
+            if (codeOptional.isEmpty()) {
+                WebElement movieDetailPage = webDriverExecutor.moveToMovieDetailPage(row);
+                MovieInfoDto movieInfoDto = dataExtractor.getMovieInfo(movieDetailPage, movieDailyStatsDto);
+                movieCommandService.save(movieInfoDto);
+
+            }
+            movieDailyStatsCommandService.save(movieDailyStatsDto, DataExtractUtils.convertToLocalDate(targetDate));
         }
     }
-
-    private LocalDate convertToLocalDate(String targetDate) {
-        String[] dateElement = targetDate.split("-");
-        return LocalDate.of(
-                Integer.parseInt(dateElement[0]),
-                Integer.parseInt(dateElement[1]),
-                Integer.parseInt(dateElement[2]));
-    }
-
 
 }
