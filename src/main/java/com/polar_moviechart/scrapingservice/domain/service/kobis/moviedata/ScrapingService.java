@@ -9,6 +9,7 @@ import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +28,16 @@ public class ScrapingService {
     private LeadActorQueryService leadActorQueryService;
     private LeadActorCommandService leadActorCommandService;
     private MovieLeadActorCommandService movieLeadActorCommandService;
+
+    public void doScrape(String startDateString, String endDateString) {
+        LocalDate startDate = DataExtractUtils.convertToLocalDate(startDateString);
+        LocalDate endDate = DataExtractUtils.convertToLocalDate(endDateString);
+        while (startDate.isBefore(endDate.plusDays(1))) {
+            String targetDate = DataExtractUtils.convertString(startDate);
+            doScrape(targetDate);
+            startDate = DataExtractUtils.convertToLocalDate(targetDate).plusDays(1);
+        }
+    }
 
     @Transactional
     public void doScrape(String targetDate) {

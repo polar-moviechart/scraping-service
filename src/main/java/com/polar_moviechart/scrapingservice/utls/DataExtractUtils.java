@@ -28,4 +28,8 @@ public class DataExtractUtils {
                 Integer.parseInt(dateElement[1]),
                 Integer.parseInt(dateElement[2]));
     }
+
+    public static String convertString(LocalDate targetDate) {
+        return targetDate.toString();
+    }
 }
