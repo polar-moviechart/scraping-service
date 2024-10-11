@@ -1,6 +1,7 @@
 package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.extractor;
 
 import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.DirectorInfoDto;
+import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.LeadActorInfoDto;
 import com.polar_moviechart.scrapingservice.exception.ScrapingDataNotFoundException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -15,7 +16,7 @@ public class DirectorExtractor {
     public List<DirectorInfoDto> getDirectorsInfo(WebElement directorsElement) {
         List<WebElement> directorsInfo = directorsElement.findElements(By.cssSelector("dd"));
 
-        Pattern pattern = Pattern.compile("mstView\\('people','(\\d+)'\\);");
+        Pattern pattern = DataExtractor.getCodePattern();
 
         return directorsInfo.stream()
                 .map(directorElement -> {
