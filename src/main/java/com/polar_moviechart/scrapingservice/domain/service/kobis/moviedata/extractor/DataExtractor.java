@@ -6,10 +6,11 @@ import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.Movie
 import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.MovieInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.WebElement;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
+@Component
 @RequiredArgsConstructor
 public class DataExtractor {
 

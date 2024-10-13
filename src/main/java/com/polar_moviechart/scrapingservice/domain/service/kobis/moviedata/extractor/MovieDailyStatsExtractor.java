@@ -5,11 +5,13 @@ import com.polar_moviechart.scrapingservice.exception.ScrapingDataNotFoundExcept
 import com.polar_moviechart.scrapingservice.utls.DataExtractUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Component
 public class MovieDailyStatsExtractor {
 
     public MovieDailyStatsDto getMovieDailyStatsInfo(List<WebElement> columns) {

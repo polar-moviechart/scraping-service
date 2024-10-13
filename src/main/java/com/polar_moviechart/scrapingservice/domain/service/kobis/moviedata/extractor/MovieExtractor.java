@@ -5,10 +5,12 @@ import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.Movie
 import com.polar_moviechart.scrapingservice.utls.DataExtractUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@Component
 public class MovieExtractor {
 
     public MovieInfoDto getMovieInfo(WebElement movieDetailPage, MovieDailyStatsDto movieDailyStatsDto) {

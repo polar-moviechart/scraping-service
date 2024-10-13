@@ -12,6 +12,7 @@ import java.time.LocalDate;
 public class MovieDailyStatsCommandService {
 
     private final MovieDailyStatsRepository movieDailyStatsRepository;
+
     public void save(MovieDailyStatsDto movieDailyStatsDto, LocalDate targetDate) {
         movieDailyStatsRepository.save(movieDailyStatsDto.toEntity(targetDate));
     }

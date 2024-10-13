@@ -1,7 +1,7 @@
 package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata;
 
 import com.polar_moviechart.scrapingservice.utls.WebDriverExecutorUtils;
-import io.github.bonigarcia.wdm.WebDriverManager;
+import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -11,12 +11,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class WebDriverExecutor {
 
     private static final String targetUrl = "https://www.kobis.or.kr/kobis/business/stat/boxs/findDailyBoxOfficeList.do";
-    private WebDriver driver;
+    private final WebDriver driver;
 
     public void navigateToPage(String targetDate) {
+        driver.get(targetUrl);
         typeToDriver(targetDate);
         WebElement searchButton = driver.findElement(By.cssSelector("div.wrap_btn > button.btn_blue"));
         searchButton.click();
@@ -49,10 +51,6 @@ public class WebDriverExecutor {
         return descriptionInfo.findElements(By.cssSelector("div"));
     }
 
-    public void initDriver() {
-        WebDriverManager.chromedriver().setup();
-    }
-
     public List<WebElement> getColumnInfo(WebElement row) {
         return row.findElements(By.tagName("td"));
     }
@@ -70,13 +68,11 @@ public class WebDriverExecutor {
 
         // 시작 날짜 입력 필드 찾기
         WebElement searchStartDate = driver.findElement(By.cssSelector("div.tf_comm > input#sSearchFrom"));
-        WebElement searchEndtDate = driver.findElement(By.cssSelector("div.tf_comm > input#sSearchTo"));
         trimDateInput(searchStartDate, 8);
-        trimDateInput(searchEndtDate, 8);
-
-        // 새로운 날짜 입력
         searchStartDate.sendKeys(formattedDate);
-        searchEndtDate.sendKeys(formattedDate);
+        WebElement searchEndDate = driver.findElement(By.cssSelector("div.tf_comm > input#sSearchTo"));
+        trimDateInput(searchEndDate, 8);
+        searchEndDate.sendKeys(formattedDate);
 
         // ESC 키를 눌러서 날짜 선택 창 닫기
         WebDriverExecutorUtils.doEsc(driver);
