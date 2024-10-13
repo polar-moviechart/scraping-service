@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class MovieDailyStats {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
 
@@ -38,7 +38,7 @@ public class MovieDailyStats {
     private LocalDateTime modifiedAt;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "movie_id")
+    @JoinColumn(name = "movie_code")
     private Movie movie;
 
     public MovieDailyStats(int code, int ranking, int revenue, LocalDate date, int audience) {
