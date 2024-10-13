@@ -21,6 +21,7 @@ public class ScrapingService {
     private final MovieDailyStatsCommandService movieDailyStatsCommandService;
     private final MovieRepository movieRepository;
     private final MovieProcessor movieProcessor;
+    private final MovieDailyStatsQueryService movieDailyStatsQueryService;
 
     public void doScrape(String targetDate) {
         webDriverExecutor.navigateToPage(targetDate);
@@ -42,7 +43,10 @@ public class ScrapingService {
             movieProcessor.processNewMovie(movieDetailPage, movieDailyStatsDto);
         }
 
-        movieDailyStatsCommandService.save(movieDailyStatsDto, DataExtractUtils.convertToLocalDate(targetDate));
+        boolean existsByCodeAndDate = movieDailyStatsQueryService.isExists(movieDailyStatsDto.getCode(), DataExtractUtils.convertToLocalDate(targetDate));
+        if (!existsByCodeAndDate) {
+            movieDailyStatsCommandService.save(movieDailyStatsDto, DataExtractUtils.convertToLocalDate(targetDate));
+        }
     }
 
     private void preparePage() {

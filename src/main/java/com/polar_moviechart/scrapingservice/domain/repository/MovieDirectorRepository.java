@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MovieDirectorRepository extends JpaRepository<MovieDirector, Long> {
+    boolean existsByMovieCodeAndDirectorCode(int movieCode, int directorCode);
 }

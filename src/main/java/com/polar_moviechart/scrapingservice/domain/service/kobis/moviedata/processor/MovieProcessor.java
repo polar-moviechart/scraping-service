@@ -15,8 +15,6 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class MovieProcessor {
-
-    private final MovieRepository movieRepository;
     private final DataExtractor dataExtractor;
     private final MovieCommandService movieCommandService;
     private final WebDriverExecutor webDriverExecutor;
