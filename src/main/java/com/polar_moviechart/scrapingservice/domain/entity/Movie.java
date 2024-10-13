@@ -2,6 +2,7 @@ package com.polar_moviechart.scrapingservice.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Getter
 @Entity
 @Table(name = "movies")
+@RequiredArgsConstructor
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,12 +48,13 @@ public class Movie {
     @LastModifiedDate
     private LocalDateTime modifiedAt;
 
-    public Movie(int code, String title, String details, LocalDate releaseYear, Integer productionYear, String synopsys) {
-        this.code = code;
-        this.title = title;
-        this.details = details;
-        this.releaseDate = releaseYear;
-        this.productionYear = productionYear;
-        this.synopsys = synopsys;
+    // 기본 생성자 추가
+    public Movie() {
+        this.code = 0;
+        this.title = "";
+        this.details = "";
+        this.releaseDate = LocalDate.now();
+        this.productionYear = 0;
+        this.synopsys = "";
     }
 }
