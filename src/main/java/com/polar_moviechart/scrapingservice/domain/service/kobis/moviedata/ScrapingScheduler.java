@@ -17,17 +17,25 @@ public class ScrapingScheduler {
         LocalDate endDate = DataExtractUtils.convertToLocalDate(endDateString);
 
         if (startDate.isBefore(endDate)) {
-            while (startDate.isBefore(endDate.plusDays(1))) {
-                String targetDate = DataExtractUtils.convertString(startDate);
-                scrapingService.doScrape(targetDate);
-                startDate = DataExtractUtils.convertToLocalDate(targetDate).plusDays(1);
-            }
+            doScrapeForward(startDate, endDate);
         } else {
-            while (startDate.isAfter(endDate.minusDays(1))) {
-                String targetDate = DataExtractUtils.convertString(startDate);
-                scrapingService.doScrape(targetDate);
-                startDate = DataExtractUtils.convertToLocalDate(targetDate).minusDays(1);
-            }
+            doScrapeBackward(startDate, endDate);
+        }
+    }
+
+    private void doScrapeBackward(LocalDate startDate, LocalDate endDate) {
+        while (startDate.isAfter(endDate.minusDays(1))) {
+            String targetDate = DataExtractUtils.convertString(startDate);
+            scrapingService.doScrape(targetDate);
+            startDate = DataExtractUtils.convertToLocalDate(targetDate).minusDays(1);
+        }
+    }
+
+    private void doScrapeForward(LocalDate startDate, LocalDate endDate) {
+        while (startDate.isBefore(endDate.plusDays(1))) {
+            String targetDate = DataExtractUtils.convertString(startDate);
+            scrapingService.doScrape(targetDate);
+            startDate = DataExtractUtils.convertToLocalDate(targetDate).plusDays(1);
         }
     }
 }
