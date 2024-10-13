@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class MovieCommandService {
 
     private final MovieRepository movieRepository;
-    public void save(MovieInfoDto movieInfoDto) {
-        movieRepository.save(movieInfoDto.toEntity());
+    public Movie save(MovieInfoDto movieInfoDto) {
+        return movieRepository.save(movieInfoDto.toEntity());
     }
 }

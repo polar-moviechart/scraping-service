@@ -1,5 +1,6 @@
 package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.processor;
 
+import com.polar_moviechart.scrapingservice.domain.entity.Movie;
 import com.polar_moviechart.scrapingservice.domain.repository.MovieRepository;
 import com.polar_moviechart.scrapingservice.domain.service.MovieCommandService;
 import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.MovieDailyStatsDto;
@@ -20,12 +21,12 @@ public class MovieProcessor {
     private final WebDriverExecutor webDriverExecutor;
     private final StaffProcessor staffProcessor;
 
-    public void processNewMovie(WebElement movieDetailPage, MovieDailyStatsDto movieDailyStatsDto) {
+    public Movie processNewMovie(WebElement movieDetailPage, MovieDailyStatsDto movieDailyStatsDto) {
         MovieInfoDto movieInfoDto = dataExtractor.getMovieInfo(movieDetailPage, movieDailyStatsDto);
         int movieCode = movieInfoDto.getCode();
-        movieCommandService.save(movieInfoDto);
 
         List<WebElement> staffElement = webDriverExecutor.getStaffElement(movieDetailPage, movieCode);
         staffProcessor.processStaffInfo(staffElement, movieCode);
+        return movieCommandService.save(movieInfoDto);
     }
 }

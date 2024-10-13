@@ -17,9 +17,6 @@ public class MovieDailyStats {
     private Long id;
 
     @Column(nullable = false)
-    private final int code;
-
-    @Column(nullable = false)
     private final int ranking;
 
     @Column(nullable = false)
@@ -37,15 +34,20 @@ public class MovieDailyStats {
     @LastModifiedDate
     private LocalDateTime modifiedAt;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "movie_code")
+    @ManyToOne(fetch = FetchType.LAZY) // ManyToOne 관계 설정
+    @JoinColumn(name = "movie_code", nullable = false) // 외래 키 설정
     private Movie movie;
 
-    public MovieDailyStats(int code, int ranking, int revenue, LocalDate date, int audience) {
-        this.code = code;
+    public void setMovie(Movie movie) {
+        this.movie = movie;
+        movie.getStats().add(this);
+    }
+
+    public MovieDailyStats(int ranking, int revenue, LocalDate date, int audience, Movie movie) {
         this.ranking = ranking;
         this.revenue = revenue;
         this.date = date;
         this.audience = audience;
+        setMovie(movie);
     }
 }

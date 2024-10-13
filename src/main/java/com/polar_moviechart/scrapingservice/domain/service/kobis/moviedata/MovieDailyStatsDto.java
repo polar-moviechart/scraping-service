@@ -1,5 +1,6 @@
 package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata;
 
+import com.polar_moviechart.scrapingservice.domain.entity.Movie;
 import com.polar_moviechart.scrapingservice.domain.entity.MovieDailyStats;
 import lombok.Getter;
 
@@ -21,13 +22,13 @@ public class MovieDailyStatsDto {
         this.audience = audience;
     }
 
-    public MovieDailyStats toEntity(LocalDate targetDate) {
+    public MovieDailyStats toEntity(Movie movie, LocalDate targetDate) {
         return new MovieDailyStats(
-                code,
                 ranking,
                 revenue,
                 targetDate,
-                audience
+                audience,
+                movie
         );
     }
 }

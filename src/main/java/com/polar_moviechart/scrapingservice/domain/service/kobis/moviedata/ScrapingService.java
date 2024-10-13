@@ -39,14 +39,15 @@ public class ScrapingService {
         MovieDailyStatsDto movieDailyStatsDto = dataExtractor.getMovieDailyStatsInfo(columnInfo);
 
         Optional<Movie> movieCodeOptional = movieRepository.findByCode(movieDailyStatsDto.getCode());
+        Movie movie = null;
         if (movieCodeOptional.isEmpty()) {
             WebElement movieDetailPage = webDriverExecutor.moveToMovieDetailPage(row);
-            movieProcessor.processNewMovie(movieDetailPage, movieDailyStatsDto);
+            movie = movieProcessor.processNewMovie(movieDetailPage, movieDailyStatsDto);
         }
 
         boolean existsByCodeAndDate = movieDailyStatsQueryService.isExists(movieDailyStatsDto.getCode(), DataExtractUtils.convertToLocalDate(targetDate));
         if (!existsByCodeAndDate) {
-            movieDailyStatsCommandService.save(movieDailyStatsDto, DataExtractUtils.convertToLocalDate(targetDate));
+            movieDailyStatsCommandService.save(movie, movieDailyStatsDto, DataExtractUtils.convertToLocalDate(targetDate));
         }
     }
 

@@ -39,7 +39,7 @@ public class Movie {
     @Column(nullable = false)
     private final String synopsys;
 
-    @OneToMany(mappedBy = "movie")
+    @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY)
     private final List<MovieDailyStats> stats = new ArrayList<>();
 
     @CreatedDate
