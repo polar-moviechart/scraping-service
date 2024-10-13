@@ -8,5 +8,5 @@ import java.time.LocalDate;
 
 @Repository
 public interface MovieDailyStatsRepository extends JpaRepository<MovieDailyStats, Long> {
-    boolean existsByCodeAndDate(int code, LocalDate targetDate);
+    boolean existsByMovieCodeAndDate(int code, LocalDate targetDate);
 }

@@ -12,7 +12,7 @@ public class MovieDailyStatsQueryService {
     private final MovieDailyStatsRepository movieDailyStatsRepository;
 
 
-    public boolean isExists(int code, LocalDate targetDate) {
-        return movieDailyStatsRepository.existsByCodeAndDate(code, targetDate);
+    public boolean isExists(int movieCode, LocalDate targetDate) {
+        return movieDailyStatsRepository.existsByMovieCodeAndDate(movieCode, targetDate);
     }
 }
