@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface MovieRepository extends JpaRepository<Movie, Long> {
 
-    Optional<Long> findByCode(int code);
+    Optional<Movie> findByCode(int code);
 }

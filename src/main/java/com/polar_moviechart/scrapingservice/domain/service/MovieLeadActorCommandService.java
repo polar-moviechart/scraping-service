@@ -1,6 +1,6 @@
 package com.polar_moviechart.scrapingservice.domain.service;
 
-import com.polar_moviechart.scrapingservice.domain.MovieLeadactor;
+import com.polar_moviechart.scrapingservice.domain.entity.MovieLeadactor;
 import com.polar_moviechart.scrapingservice.domain.repository.MovieLeadActorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

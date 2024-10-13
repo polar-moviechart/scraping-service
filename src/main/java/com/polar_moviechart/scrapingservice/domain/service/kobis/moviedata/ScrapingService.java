@@ -1,5 +1,6 @@
 package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata;
 
+import com.polar_moviechart.scrapingservice.domain.entity.Movie;
 import com.polar_moviechart.scrapingservice.domain.repository.MovieRepository;
 import com.polar_moviechart.scrapingservice.domain.service.*;
 import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.extractor.DataExtractor;
@@ -37,7 +38,7 @@ public class ScrapingService {
         List<WebElement> columnInfo = webDriverExecutor.getColumnInfo(row);
         MovieDailyStatsDto movieDailyStatsDto = dataExtractor.getMovieDailyStatsInfo(columnInfo);
 
-        Optional<Long> movieCodeOptional = movieRepository.findByCode(movieDailyStatsDto.getCode());
+        Optional<Movie> movieCodeOptional = movieRepository.findByCode(movieDailyStatsDto.getCode());
         if (movieCodeOptional.isEmpty()) {
             WebElement movieDetailPage = webDriverExecutor.moveToMovieDetailPage(row);
             movieProcessor.processNewMovie(movieDetailPage, movieDailyStatsDto);
