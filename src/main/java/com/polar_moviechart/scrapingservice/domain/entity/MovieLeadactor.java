@@ -10,19 +10,18 @@ import java.time.LocalDateTime;
 
 @Getter
 @Entity
-@Table(name = "leadactors")
+@Table(name = "movie_leadactor")
 @RequiredArgsConstructor
-public class LeadActor {
-
+public class MovieLeadactor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private final int code;
+    private final int movieCode;
 
     @Column(nullable = false)
-    private final String name;
+    private final int leadactorCode;
 
     @CreatedDate
     private LocalDateTime createdAt;
