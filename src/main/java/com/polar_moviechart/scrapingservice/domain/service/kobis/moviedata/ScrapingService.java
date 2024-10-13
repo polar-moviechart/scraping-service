@@ -29,6 +29,8 @@ public class ScrapingService {
     private LeadActorCommandService leadActorCommandService;
     private MovieLeadActorCommandService movieLeadActorCommandService;
 
+    private ScrapingScheduler scrapingScheduler;
+
     public void doScrape(String startDateString, String endDateString) {
         LocalDate startDate = DataExtractUtils.convertToLocalDate(startDateString);
         LocalDate endDate = DataExtractUtils.convertToLocalDate(endDateString);
