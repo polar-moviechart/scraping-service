@@ -41,11 +41,9 @@ public class Movie {
     private final List<MovieDailyStats> stats = new ArrayList<>();
 
     @CreatedDate
-    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(nullable = false)
     private LocalDateTime modifiedAt;
 
     public Movie(int code, String title, String details, LocalDate releaseYear, Integer productionYear, String synopsys) {

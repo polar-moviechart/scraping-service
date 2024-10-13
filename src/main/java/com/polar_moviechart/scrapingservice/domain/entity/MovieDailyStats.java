@@ -32,11 +32,9 @@ public class MovieDailyStats {
     private final LocalDate date;
 
     @CreatedDate
-    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(nullable = false)
     private LocalDateTime modifiedAt;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
