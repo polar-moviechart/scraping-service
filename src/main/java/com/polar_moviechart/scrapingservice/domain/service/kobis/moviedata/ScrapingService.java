@@ -32,10 +32,19 @@ public class ScrapingService {
     public void doScrape(String startDateString, String endDateString) {
         LocalDate startDate = DataExtractUtils.convertToLocalDate(startDateString);
         LocalDate endDate = DataExtractUtils.convertToLocalDate(endDateString);
-        while (startDate.isBefore(endDate.plusDays(1))) {
-            String targetDate = DataExtractUtils.convertString(startDate);
-            doScrape(targetDate);
-            startDate = DataExtractUtils.convertToLocalDate(targetDate).plusDays(1);
+
+        if (startDate.isBefore(endDate)) {
+            while (startDate.isBefore(endDate.plusDays(1))) {
+                String targetDate = DataExtractUtils.convertString(startDate);
+                doScrape(targetDate);
+                startDate = DataExtractUtils.convertToLocalDate(targetDate).plusDays(1);
+            }
+        } else {
+            while (startDate.isAfter(endDate.minusDays(1))) {
+                String targetDate = DataExtractUtils.convertString(startDate);
+                doScrape(targetDate);
+                startDate = DataExtractUtils.convertToLocalDate(targetDate).minusDays(1);
+            }
         }
     }
 
