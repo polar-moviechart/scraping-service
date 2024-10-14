@@ -11,7 +11,9 @@ import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -19,7 +21,7 @@ public class MovieExtractor {
 
     public MovieInfoDto getMovieInfo(WebElement movieDetailPage, MovieDailyStatsDto movieDailyStatsDto) {
         String title = movieDailyStatsDto.getTitle();
-        MovieInfoDto movieInfoDto = null;
+        MovieInfoDto movieInfoDto;
         try {
             // 영화를 클릭하면 나오는 상세 정보 템플릿에서 영화 메타데이터 가져오기
             String titleEnglish = movieDetailPage.findElement(By.cssSelector("div.hd_layer > div"))
@@ -30,28 +32,44 @@ public class MovieExtractor {
 
             WebElement movieInfo = movieDetailPage.findElement(By.cssSelector("dl.ovf"));
             String synopsys = movieDetailPage.findElement(By.cssSelector("p.desc_info")).getText();
-            List<WebElement> metadata = movieInfo.findElements(By.cssSelector("dt, dd"));
 
-            String codeString = metadata.get(1).getText();
-            String details = metadata.get(7).getText();
-            String releaseDateString = metadata.get(11).getText();
-            String productionYear = metadata.get(13).getText();
-            LocalDate releaseDate = DataExtractUtils.convertToLocalDate(releaseDateString);
-
-            movieInfoDto = new MovieInfoDto (
-                    Integer.parseInt(codeString),
-                    title,
-                    details,
-                    releaseDate,
-                    convertToInteger(productionYear),
-                    synopsys
-            );
+            Map<String, String> dataMap = getMetadata(movieInfo);
+            movieInfoDto = getMovieInfoDto(title, synopsys, dataMap);
         } catch (Exception e) {
             ScrapingExceptionDto exceptionDto = new ScrapingExceptionDto();
             exceptionDto.setMovieName(title);
             throw new ScrapingException(e, exceptionDto);
         }
         return movieInfoDto;
+    }
+
+    private MovieInfoDto getMovieInfoDto(String title, String synopsys, Map<String, String> dataMap) {
+        MovieInfoDto movieInfoDto;
+        Integer code = Integer.parseInt(dataMap.get("코드"));
+        String details = dataMap.get("요약정보");
+        LocalDate releaseDate = DataExtractUtils.convertToLocalDate(dataMap.get("개봉일"));
+        Integer productionYear = convertToInteger(dataMap.get("제작연도"));
+
+        movieInfoDto = new MovieInfoDto (
+                code,
+                title,
+                details,
+                releaseDate,
+                productionYear,
+                synopsys
+        );
+        return movieInfoDto;
+    }
+
+    private Map<String, String> getMetadata(WebElement movieInfo) {
+        List<WebElement> metadata = movieInfo.findElements(By.cssSelector("dt, dd"));
+        Map<String, String> dataMap = new HashMap<>();
+        for (int keyIdx = 0; keyIdx < metadata.size() - 1; keyIdx++) {
+            String key = metadata.get(keyIdx).getText();
+            String value = metadata.get(keyIdx + 1).getText();
+            dataMap.put(key, value);
+        }
+        return dataMap;
     }
 
     private Integer convertToInteger(String productionYear) {
