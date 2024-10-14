@@ -35,19 +35,20 @@ public class MovieDailyStats {
     private LocalDateTime modifiedAt;
 
     @ManyToOne(fetch = FetchType.LAZY) // ManyToOne 관계 설정
-    @JoinColumn(name = "movie_code", nullable = false) // 외래 키 설정
+    @JoinColumn(name = "movie_code", referencedColumnName = "code",nullable = false) // 외래 키 설정
     private Movie movie;
 
     public void setMovie(Movie movie) {
-        this.movie = movie;
-        movie.getStats().add(this);
+        if (movie != null) {
+            this.movie = movie;
+            movie.getStats().add(this);
+        }
     }
 
-    public MovieDailyStats(int ranking, int revenue, LocalDate date, int audience, Movie movie) {
+    public MovieDailyStats(int ranking, int revenue, LocalDate date, int audience) {
         this.ranking = ranking;
         this.revenue = revenue;
         this.date = date;
         this.audience = audience;
-        setMovie(movie);
     }
 }

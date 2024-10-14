@@ -22,13 +22,12 @@ public class MovieDailyStatsDto {
         this.audience = audience;
     }
 
-    public MovieDailyStats toEntity(Movie movie, LocalDate targetDate) {
+    public MovieDailyStats toEntity(LocalDate targetDate) {
         return new MovieDailyStats(
                 ranking,
                 revenue,
                 targetDate,
-                audience,
-                movie
+                audience
         );
     }
 }
