@@ -18,10 +18,7 @@ public class WebDriverExecutor {
     private static final String targetUrl = "https://www.kobis.or.kr/kobis/business/stat/boxs/findDailyBoxOfficeList.do";
     private final WebDriver driver;
 
-    public void navigateToPage(String targetDate) {
-        driver.get(targetUrl);
-        driver.navigate();
-
+    public void navigateTo(String targetDate) {
         typeToDriver(targetDate);
         WebElement searchButton = driver.findElement(By.cssSelector("div.wrap_btn > button.btn_blue"));
         searchButton.click();
@@ -93,5 +90,10 @@ public class WebDriverExecutor {
         for (int i = 0; i < trimCount; i++) {
             webElement.sendKeys(Keys.BACK_SPACE);
         }
+    }
+
+    public void navigateMainPage() {
+        driver.get(targetUrl);
+        driver.navigate();
     }
 }

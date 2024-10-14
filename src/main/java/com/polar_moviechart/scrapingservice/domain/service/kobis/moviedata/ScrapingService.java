@@ -29,7 +29,8 @@ public class ScrapingService {
 
     @Transactional
     public void doScrape(String targetDate) {
-        webDriverExecutor.navigateToPage(targetDate);
+        webDriverExecutor.navigateMainPage();
+        webDriverExecutor.navigateTo(targetDate);
         preparePage();
 
         List<WebElement> movieRows = webDriverExecutor.getMovieRows(targetDate);
