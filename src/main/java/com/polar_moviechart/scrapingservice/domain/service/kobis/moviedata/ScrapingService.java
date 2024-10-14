@@ -41,7 +41,7 @@ public class ScrapingService {
     @Transactional
     private void processMovieRow(WebElement row, String targetDate) {
         List<WebElement> columnInfo = webDriverExecutor.getColumnInfo(row);
-        MovieDailyStatsDto movieDailyStatsDto = dataExtractor.getMovieDailyStatsInfo(columnInfo, targetDate);
+        MovieDailyStatsDto movieDailyStatsDto = dataExtractor.getMovieDailyStatsInfo(columnInfo);
 
         Optional<Movie> movieOptional = movieRepository.findByCode(movieDailyStatsDto.getCode());
 

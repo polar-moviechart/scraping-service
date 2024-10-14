@@ -17,11 +17,11 @@ public class DataExtractor {
     private final DirectorExtractor directorExtractor;
     private final LeadActorExtractor leadActorExtractor;
 
-    public MovieInfoDto getMovieInfo(WebElement movieDetailPage, MovieDailyStatsDto movieDailyStatsDto, String targetDate) {
+    public MovieInfoDto getMovieInfo(WebElement movieDetailPage, MovieDailyStatsDto movieDailyStatsDto) {
         return movieExtractor.getMovieInfo(movieDetailPage, movieDailyStatsDto);
     }
 
-    public MovieDailyStatsDto getMovieDailyStatsInfo(List<WebElement> columns, String targetDate) {
+    public MovieDailyStatsDto getMovieDailyStatsInfo(List<WebElement> columns) {
         return movieDailyStatsExtractor.getMovieDailyStatsInfo(columns);
     }
 

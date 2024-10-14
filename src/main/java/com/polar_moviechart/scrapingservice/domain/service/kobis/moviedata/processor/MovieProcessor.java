@@ -19,26 +19,18 @@ public class MovieProcessor {
 
     @Transactional
     public Movie processNewMovie(WebElement movieDetailPage, MovieDailyStatsDto movieDailyStatsDto, String targetDate) {
-        Movie movie;
-        MovieInfoDto movieInfoDto = null;
+        MovieInfoDto movieInfoDto = dataExtractor.getMovieInfo(movieDetailPage, movieDailyStatsDto);
+        int movieCode = movieInfoDto.getCode();
+        Movie movie = movieCommandService.save(movieInfoDto);
         try {
-            movieInfoDto = dataExtractor.getMovieInfo(movieDetailPage, movieDailyStatsDto, targetDate);
-            int movieCode = movieInfoDto.getCode();
-            movie = movieCommandService.save(movieInfoDto);
-
             if (movie.getReleaseDate() == null && movie.getProductionYear() == null) {
                 return movie;
             }
-
             StaffInfoDto staffInfoDto = dataExtractor.getStaffInfo(movieDetailPage, movieCode);
             staffProcessor.processStaffInfo(staffInfoDto, movieCode, targetDate);
-        } catch (ScrapingException e) {
+        } catch (Exception e) {
             ScrapingExceptionDto exceptionDto = new ScrapingExceptionDto();
-            if (movieInfoDto != null) {
-                exceptionDto.setMovieName(movieInfoDto.getTitle());
-            } else {
-                exceptionDto.setMovieName(e.getExceptionDto().getMovieName());
-            }
+            exceptionDto.setMovieName(movie.getTitle());
             exceptionDto.setTargetDate(targetDate);
             throw new ScrapingException(e, exceptionDto);
         }
