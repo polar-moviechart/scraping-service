@@ -9,11 +9,12 @@ import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.WebDr
 import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.extractor.DataExtractor;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.WebElement;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class MovieProcessor {
     private final DataExtractor dataExtractor;
@@ -21,12 +22,14 @@ public class MovieProcessor {
     private final WebDriverExecutor webDriverExecutor;
     private final StaffProcessor staffProcessor;
 
+    @Transactional
     public Movie processNewMovie(WebElement movieDetailPage, MovieDailyStatsDto movieDailyStatsDto) {
         MovieInfoDto movieInfoDto = dataExtractor.getMovieInfo(movieDetailPage, movieDailyStatsDto);
         int movieCode = movieInfoDto.getCode();
 
         List<WebElement> staffElement = webDriverExecutor.getStaffElement(movieDetailPage, movieCode);
+        Movie movie = movieCommandService.save(movieInfoDto);
         staffProcessor.processStaffInfo(staffElement, movieCode);
-        return movieCommandService.save(movieInfoDto);
+        return movie;
     }
 }

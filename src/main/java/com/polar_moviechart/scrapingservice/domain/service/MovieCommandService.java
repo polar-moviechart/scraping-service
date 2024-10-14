@@ -5,9 +5,11 @@ import com.polar_moviechart.scrapingservice.domain.repository.MovieRepository;
 import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.MovieInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MovieCommandService {
 
     private final MovieRepository movieRepository;

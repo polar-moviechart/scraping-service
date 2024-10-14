@@ -6,11 +6,12 @@ import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.LeadA
 import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.extractor.DataExtractor;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.WebElement;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class StaffProcessor {
 
@@ -24,6 +25,7 @@ public class StaffProcessor {
     private final MovieDirectorQueryService movieDirectorQueryService;
     private final MovieLeadActorQueryService movieLeadActorQueryservice;
 
+    @Transactional
     public void processStaffInfo(List<WebElement> staffElement, int movieCode) {
         List<DirectorInfoDto> directorsDto = dataExtractor.getDirectorsInfo(staffElement.get(0));
         for (DirectorInfoDto directorDto : directorsDto) {

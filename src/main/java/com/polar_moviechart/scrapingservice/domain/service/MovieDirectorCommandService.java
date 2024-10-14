@@ -4,9 +4,11 @@ import com.polar_moviechart.scrapingservice.domain.entity.MovieDirector;
 import com.polar_moviechart.scrapingservice.domain.repository.MovieDirectorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MovieDirectorCommandService {
     private final MovieDirectorRepository movieDirectorRepository;
 

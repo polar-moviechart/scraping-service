@@ -11,7 +11,6 @@ import java.time.LocalDate;
 public class MovieDailyStatsQueryService {
     private final MovieDailyStatsRepository movieDailyStatsRepository;
 
-
     public boolean isExists(int movieCode, LocalDate targetDate) {
         return movieDailyStatsRepository.existsByMovieCodeAndDate(movieCode, targetDate);
     }
