@@ -27,7 +27,9 @@ public class MovieProcessor {
                 return movie;
             }
             StaffInfoDto staffInfoDto = dataExtractor.getStaffInfo(movieDetailPage, movieCode);
-            staffProcessor.processStaffInfo(staffInfoDto, movieCode, targetDate);
+            if (staffInfoDto != null) {
+                staffProcessor.processStaffInfo(staffInfoDto, movieCode, targetDate);
+            }
         } catch (Exception e) {
             ScrapingExceptionDto exceptionDto = new ScrapingExceptionDto();
             exceptionDto.setMovieName(movie.getTitle());
