@@ -36,6 +36,7 @@ public class ScrapingScheduler {
     }
 
     private void doScrapeBackward(LocalDate startDate, LocalDate endDate) {
+        scrapingService.navigateToMainPage();
         while (startDate.isAfter(endDate.minusDays(1))) {
             String targetDate = DataExtractUtils.convertString(startDate);
             scrapingService.doScrape(targetDate);
@@ -44,6 +45,7 @@ public class ScrapingScheduler {
     }
 
     private void doScrapeForward(LocalDate startDate, LocalDate endDate) {
+        scrapingService.navigateToMainPage();
         while (startDate.isBefore(endDate.plusDays(1))) {
             String targetDate = DataExtractUtils.convertString(startDate);
             scrapingService.doScrape(targetDate);

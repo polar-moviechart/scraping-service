@@ -29,7 +29,6 @@ public class ScrapingService {
 
     @Transactional
     public void doScrape(String targetDate) {
-        webDriverExecutor.navigateMainPage();
         webDriverExecutor.navigateTo(targetDate);
         preparePage();
 
@@ -63,5 +62,9 @@ public class ScrapingService {
 
     private void preparePage() {
         webDriverExecutor.clickMoreButton();  // 더 보기 버튼 클릭
+    }
+
+    public void navigateToMainPage() {
+        webDriverExecutor.navigateMainPage();
     }
 }
