@@ -1,5 +1,6 @@
 package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata;
 
+import com.polar_moviechart.scrapingservice.exception.ScrapingException;
 import com.polar_moviechart.scrapingservice.utls.WebDriverExecutorUtils;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.By;
@@ -40,9 +41,17 @@ public class WebDriverExecutor {
         }
     }
 
-    public List<WebElement> getMovieRows() {
-        WebElement movieTable = driver.findElement(By.cssSelector("tbody#tbody_0"));
-        return movieTable.findElements(By.tagName("tr"));
+    public List<WebElement> getMovieRows(String targetDate) {
+        List<WebElement> movietable;
+        try {
+            WebElement movieTable = driver.findElement(By.cssSelector("tbody#tbody_0"));
+            movietable = movieTable.findElements(By.tagName("tr"));
+        } catch (Exception e) {
+            ScrapingExceptionDto exceptionDto = new ScrapingExceptionDto();
+            exceptionDto.setTargetDate(targetDate);
+            throw new ScrapingException(e, exceptionDto);
+        }
+        return movietable;
     }
 
     public List<WebElement> getStaffElement(WebElement movieDetailPage, Integer movieCode) {

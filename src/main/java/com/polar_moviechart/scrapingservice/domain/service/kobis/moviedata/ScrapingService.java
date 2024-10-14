@@ -32,7 +32,7 @@ public class ScrapingService {
         webDriverExecutor.navigateToPage(targetDate);
         preparePage();
 
-        List<WebElement> movieRows = webDriverExecutor.getMovieRows();
+        List<WebElement> movieRows = webDriverExecutor.getMovieRows(targetDate);
         for (WebElement row : movieRows) {
             processMovieRow(row, targetDate);
         }

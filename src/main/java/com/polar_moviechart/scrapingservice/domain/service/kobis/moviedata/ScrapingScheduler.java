@@ -1,7 +1,10 @@
 package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata;
 
+import com.polar_moviechart.scrapingservice.exception.ScrapingException;
 import com.polar_moviechart.scrapingservice.utls.DataExtractUtils;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -10,16 +13,25 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class ScrapingScheduler {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private final ScrapingService scrapingService;
 
     public void doScrape(String startDateString, String endDateString) {
         LocalDate startDate = DataExtractUtils.convertToLocalDate(startDateString);
         LocalDate endDate = DataExtractUtils.convertToLocalDate(endDateString);
 
-        if (startDate.isBefore(endDate)) {
-            doScrapeForward(startDate, endDate);
-        } else {
-            doScrapeBackward(startDate, endDate);
+        try {
+            if (startDate.isBefore(endDate)) {
+                doScrapeForward(startDate, endDate);
+            } else {
+                doScrapeBackward(startDate, endDate);
+            }
+        } catch (ScrapingException e) {
+            logger.info("=== 스크래핑 도중 예외 발생 ===");
+            logger.info("=== 날짜: {} ===", e.getExceptionDto().getTargetDate());
+            logger.info("=== 영화명: {} ===", e.getExceptionDto().getMovieName());
+            e.printStackTrace();
         }
     }
 
