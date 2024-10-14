@@ -30,10 +30,10 @@ public class Movie {
     @Column(nullable = false)
     private final String details;
 
-    @Column(nullable = false)
+    @Column
     private final LocalDate releaseDate;
 
-    @Column(nullable = false)
+    @Column
     private final Integer productionYear;
 
     @Column(nullable = false)

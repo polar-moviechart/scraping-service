@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -31,7 +32,10 @@ public class MovieExtractor {
             title = " " + titleEnglish;
 
             WebElement movieInfo = movieDetailPage.findElement(By.cssSelector("dl.ovf"));
-            String synopsys = movieDetailPage.findElement(By.cssSelector("p.desc_info")).getText();
+            String synopsys = movieDetailPage.findElements(By.cssSelector("p.desc_info")).stream()
+                    .findFirst()
+                    .map(WebElement::getText)
+                    .orElse("");
 
             Map<String, String> dataMap = getMetadata(movieInfo);
             movieInfoDto = getMovieInfoDto(title, synopsys, dataMap);
@@ -47,8 +51,15 @@ public class MovieExtractor {
         MovieInfoDto movieInfoDto;
         Integer code = Integer.parseInt(dataMap.get("코드"));
         String details = dataMap.get("요약정보");
-        LocalDate releaseDate = DataExtractUtils.convertToLocalDate(dataMap.get("개봉일"));
-        Integer productionYear = convertToInteger(dataMap.get("제작연도"));
+
+        LocalDate releaseDate = Optional.ofNullable(dataMap.get("개봉일"))
+                .map(DataExtractUtils::convertToLocalDate)
+                .orElse(null);
+
+        Integer productionYear = Optional.ofNullable(dataMap.get("제작연도"))
+                .filter(value -> !"해당정보없음".equals(value))
+                .map(this::convertToInteger)
+                .orElse(null);
 
         movieInfoDto = new MovieInfoDto (
                 code,

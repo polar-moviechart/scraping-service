@@ -30,9 +30,13 @@ public class MovieProcessor {
         try {
             movieInfoDto = dataExtractor.getMovieInfo(movieDetailPage, movieDailyStatsDto, targetDate);
             int movieCode = movieInfoDto.getCode();
+            movie = movieCommandService.save(movieInfoDto);
+
+            if (movie.getReleaseDate() == null && movie.getProductionYear() == null) {
+                return movie;
+            }
 
             List<WebElement> staffElement = webDriverExecutor.getStaffElement(movieDetailPage, movieCode);
-            movie = movieCommandService.save(movieInfoDto);
             staffProcessor.processStaffInfo(staffElement, movieCode, targetDate);
         } catch (ScrapingException e) {
             ScrapingExceptionDto exceptionDto = new ScrapingExceptionDto();
