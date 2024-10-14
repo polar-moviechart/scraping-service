@@ -19,6 +19,8 @@ public class WebDriverExecutor {
 
     public void navigateToPage(String targetDate) {
         driver.get(targetUrl);
+        driver.navigate();
+
         typeToDriver(targetDate);
         WebElement searchButton = driver.findElement(By.cssSelector("div.wrap_btn > button.btn_blue"));
         searchButton.click();
@@ -59,7 +61,7 @@ public class WebDriverExecutor {
         WebElement secondTd = row.findElements(By.tagName("td")).get(1);
         WebElement movieInfoLink = secondTd.findElement(By.cssSelector("span.ellip.per90 > a"));
         movieInfoLink.click();
-        return driver.findElement(By.cssSelector("div[tabindex='-1'"));
+        return driver.findElement(By.cssSelector("div[tabindex='-1']"));
     }
 
     private void typeToDriver(String targetDate) {
