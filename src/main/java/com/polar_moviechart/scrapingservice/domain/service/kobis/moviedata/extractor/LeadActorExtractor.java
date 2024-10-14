@@ -29,6 +29,7 @@ public class LeadActorExtractor {
                     String onClickAttr = leadActor.getAttribute("onClick");
                     Matcher matcher = pattern.matcher(onClickAttr);
                     try {
+                        matcher.find();
                         String leadActorCode = matcher.group(1);
                         return new LeadActorInfoDto(
                                 Integer.parseInt(leadActorCode),

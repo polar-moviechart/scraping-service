@@ -45,12 +45,10 @@ public class MovieDailyStatsExtractor {
 
         // 코드 찾기
         try {
-            if (matcher.find()) {
-                return Integer.parseInt(matcher.group(1));
-            }
+            matcher.find();
+            return Integer.parseInt(matcher.group(1));
         } catch (Exception e) {
             throw new ScrapingException("영화 코드 추출 중 예외 발생.", e);
         }
-        throw new ScrapingException("코드를 찾을 수 없습니다.");
     }
 }

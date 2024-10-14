@@ -29,6 +29,7 @@ public class DirectorExtractor {
                     Matcher matcher = pattern.matcher(onClickAttr);
 
                     try {
+                        matcher.find();
                         Integer directorCode = Integer.parseInt(matcher.group(1));
                         return new DirectorInfoDto(directorCode, directorName);
                     } catch (Exception e) {
