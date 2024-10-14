@@ -1,12 +1,13 @@
 package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.processor;
 
 import com.polar_moviechart.scrapingservice.domain.entity.Movie;
-import com.polar_moviechart.scrapingservice.domain.repository.MovieRepository;
 import com.polar_moviechart.scrapingservice.domain.service.MovieCommandService;
 import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.MovieDailyStatsDto;
 import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.MovieInfoDto;
+import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.ScrapingExceptionDto;
 import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.WebDriverExecutor;
 import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.extractor.DataExtractor;
+import com.polar_moviechart.scrapingservice.exception.ScrapingException;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
@@ -23,13 +24,26 @@ public class MovieProcessor {
     private final StaffProcessor staffProcessor;
 
     @Transactional
-    public Movie processNewMovie(WebElement movieDetailPage, MovieDailyStatsDto movieDailyStatsDto) {
-        MovieInfoDto movieInfoDto = dataExtractor.getMovieInfo(movieDetailPage, movieDailyStatsDto);
-        int movieCode = movieInfoDto.getCode();
+    public Movie processNewMovie(WebElement movieDetailPage, MovieDailyStatsDto movieDailyStatsDto, String targetDate) {
+        Movie movie;
+        MovieInfoDto movieInfoDto = null;
+        try {
+            movieInfoDto = dataExtractor.getMovieInfo(movieDetailPage, movieDailyStatsDto, targetDate);
+            int movieCode = movieInfoDto.getCode();
 
-        List<WebElement> staffElement = webDriverExecutor.getStaffElement(movieDetailPage, movieCode);
-        Movie movie = movieCommandService.save(movieInfoDto);
-        staffProcessor.processStaffInfo(staffElement, movieCode);
+            List<WebElement> staffElement = webDriverExecutor.getStaffElement(movieDetailPage, movieCode);
+            movie = movieCommandService.save(movieInfoDto);
+            staffProcessor.processStaffInfo(staffElement, movieCode, targetDate);
+        } catch (ScrapingException e) {
+            ScrapingExceptionDto exceptionDto = new ScrapingExceptionDto();
+            if (movieInfoDto != null) {
+                exceptionDto.setMovieName(movieInfoDto.getTitle());
+            } else {
+                exceptionDto.setMovieName(e.getExceptionDto().getMovieName());
+            }
+            exceptionDto.setTargetDate(targetDate);
+            throw new ScrapingException(e, exceptionDto);
+        }
         return movie;
     }
 }

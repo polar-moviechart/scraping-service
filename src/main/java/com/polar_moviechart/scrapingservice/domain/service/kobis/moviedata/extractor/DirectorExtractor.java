@@ -1,6 +1,7 @@
 package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.extractor;
 
 import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.DirectorInfoDto;
+import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.ScrapingExceptionDto;
 import com.polar_moviechart.scrapingservice.exception.ScrapingException;
 import com.polar_moviechart.scrapingservice.utls.DataExtractUtils;
 import org.openqa.selenium.By;
@@ -27,11 +28,13 @@ public class DirectorExtractor {
                     String onClickAttr = directorInfo.getAttribute("onClick");
                     Matcher matcher = pattern.matcher(onClickAttr);
 
-                    if (matcher.find()) {
+                    try {
                         Integer directorCode = Integer.parseInt(matcher.group(1));
                         return new DirectorInfoDto(directorCode, directorName);
-                    } else {
-                        throw new ScrapingException("감독 스크래핑 중 문제 발생.");
+                    } catch (Exception e) {
+                        ScrapingExceptionDto exceptionDto = new ScrapingExceptionDto();
+                        exceptionDto.setName(directorName);
+                        throw new ScrapingException(e, exceptionDto);
                     }
                 })
                 .collect(Collectors.toList());

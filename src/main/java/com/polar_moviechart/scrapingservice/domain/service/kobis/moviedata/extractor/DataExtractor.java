@@ -1,9 +1,7 @@
 package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.extractor;
 
-import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.DirectorInfoDto;
-import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.LeadActorInfoDto;
-import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.MovieDailyStatsDto;
-import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.MovieInfoDto;
+import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.*;
+import com.polar_moviechart.scrapingservice.exception.ScrapingException;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Component;
@@ -19,19 +17,19 @@ public class DataExtractor {
     private final DirectorExtractor directorExtractor;
     private final LeadActorExtractor leadActorExtractor;
 
-    public MovieInfoDto getMovieInfo(WebElement movieDetailPage, MovieDailyStatsDto movieDailyStatsDto) {
+    public MovieInfoDto getMovieInfo(WebElement movieDetailPage, MovieDailyStatsDto movieDailyStatsDto, String targetDate) {
         return movieExtractor.getMovieInfo(movieDetailPage, movieDailyStatsDto);
     }
 
-    public MovieDailyStatsDto getMovieDailyStatsInfo(List<WebElement> columns) {
+    public MovieDailyStatsDto getMovieDailyStatsInfo(List<WebElement> columns, String targetDate) {
         return movieDailyStatsExtractor.getMovieDailyStatsInfo(columns);
     }
 
-    public List<DirectorInfoDto> getDirectorsInfo(WebElement directorsElement) {
+    public List<DirectorInfoDto> getDirectorsInfo(WebElement directorsElement, String targetDate) {
         return directorExtractor.getDirectorsInfo(directorsElement);
     }
 
-    public List<LeadActorInfoDto> getLeadActorsInfo(WebElement leadActorsElement) {
+    public List<LeadActorInfoDto> getLeadActorsInfo(WebElement leadActorsElement, String targetDate) {
         return leadActorExtractor.getLeadActorsInfo(leadActorsElement);
     }
 }

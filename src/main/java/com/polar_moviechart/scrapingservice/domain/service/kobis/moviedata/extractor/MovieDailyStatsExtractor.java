@@ -1,6 +1,8 @@
 package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.extractor;
 
+import com.polar_moviechart.scrapingservice.domain.entity.MovieDailyStats;
 import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.MovieDailyStatsDto;
+import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.ScrapingExceptionDto;
 import com.polar_moviechart.scrapingservice.exception.ScrapingException;
 import com.polar_moviechart.scrapingservice.utls.DataExtractUtils;
 import org.openqa.selenium.By;
@@ -15,16 +17,25 @@ import java.util.regex.Pattern;
 public class MovieDailyStatsExtractor {
 
     public MovieDailyStatsDto getMovieDailyStatsInfo(List<WebElement> columns) {
-        int rank = DataExtractUtils.convertToInt(columns.get(0).getText());
         String title = columns.get(1).getText();
-        int sales = DataExtractUtils.convertToInt(columns.get(3).getText());
-        int audience = DataExtractUtils.convertToInt(columns.get(7).getText());
+        MovieDailyStatsDto dailyStatsDto = null;
+        try {
+            int rank = DataExtractUtils.convertToInt(columns.get(0).getText());
+            int sales = DataExtractUtils.convertToInt(columns.get(3).getText());
+            int audience = DataExtractUtils.convertToInt(columns.get(7).getText());
 
-        WebElement linkElement = columns.get(1).findElement(By.cssSelector("a"));
-        String onClickValue = linkElement.getAttribute("onClick");
-        int code = extractMovieCode(onClickValue);
+            WebElement linkElement = columns.get(1).findElement(By.cssSelector("a"));
+            String onClickValue = linkElement.getAttribute("onClick");
+            int code = extractMovieCode(onClickValue);
 
-        return new MovieDailyStatsDto(code, rank, title, sales, audience);
+            dailyStatsDto = new MovieDailyStatsDto(code, rank, title, sales, audience);
+        } catch (Exception e) {
+            ScrapingExceptionDto exceptionDto = new ScrapingExceptionDto();
+            exceptionDto.setMovieName(title);
+            throw new ScrapingException(e, exceptionDto);
+        }
+
+        return dailyStatsDto;
     }
 
     private int extractMovieCode(String onClickValue) {

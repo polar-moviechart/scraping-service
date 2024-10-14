@@ -26,8 +26,8 @@ public class StaffProcessor {
     private final MovieLeadActorQueryService movieLeadActorQueryservice;
 
     @Transactional
-    public void processStaffInfo(List<WebElement> staffElement, int movieCode) {
-        List<DirectorInfoDto> directorsDto = dataExtractor.getDirectorsInfo(staffElement.get(0));
+    public void processStaffInfo(List<WebElement> staffElement, int movieCode, String targetDate) {
+        List<DirectorInfoDto> directorsDto = dataExtractor.getDirectorsInfo(staffElement.get(0), targetDate);
         for (DirectorInfoDto directorDto : directorsDto) {
             if (!directorQueryService.isExists(directorDto.getCode())) {
                 directorCommandService.save(directorDto);
@@ -37,7 +37,7 @@ public class StaffProcessor {
             }
         }
 
-        List<LeadActorInfoDto> leadActorsDto = dataExtractor.getLeadActorsInfo(staffElement.get(1));
+        List<LeadActorInfoDto> leadActorsDto = dataExtractor.getLeadActorsInfo(staffElement.get(1), targetDate);
         for (LeadActorInfoDto leadActorDto : leadActorsDto) {
             if (!leadActorQueryService.isExists(leadActorDto.getCode())) {
                 leadActorCommandService.save(leadActorDto);

@@ -1,6 +1,7 @@
 package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.extractor;
 
 import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.LeadActorInfoDto;
+import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.ScrapingExceptionDto;
 import com.polar_moviechart.scrapingservice.exception.ScrapingException;
 import com.polar_moviechart.scrapingservice.utls.DataExtractUtils;
 import org.openqa.selenium.By;
@@ -27,14 +28,15 @@ public class LeadActorExtractor {
                     String leadActorName = leadActor.getText();
                     String onClickAttr = leadActor.getAttribute("onClick");
                     Matcher matcher = pattern.matcher(onClickAttr);
-
-                    if (matcher.find()) {
+                    try {
                         String leadActorCode = matcher.group(1);
                         return new LeadActorInfoDto(
                                 Integer.parseInt(leadActorCode),
                                 leadActorName);
-                    } else {
-                        throw new ScrapingException("주연 배우 스크래핑 중 문제 발생.");
+                    } catch (Exception e) {
+                        ScrapingExceptionDto exceptionDto = new ScrapingExceptionDto();
+                        exceptionDto.setName(leadActorName);
+                        throw new ScrapingException(e, exceptionDto);
                     }
                 })
                 .collect(Collectors.toList());
