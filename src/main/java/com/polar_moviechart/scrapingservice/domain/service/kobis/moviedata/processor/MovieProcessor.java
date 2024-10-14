@@ -2,10 +2,7 @@ package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.proc
 
 import com.polar_moviechart.scrapingservice.domain.entity.Movie;
 import com.polar_moviechart.scrapingservice.domain.service.MovieCommandService;
-import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.MovieDailyStatsDto;
-import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.MovieInfoDto;
-import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.ScrapingExceptionDto;
-import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.WebDriverExecutor;
+import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.*;
 import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.extractor.DataExtractor;
 import com.polar_moviechart.scrapingservice.exception.ScrapingException;
 import lombok.RequiredArgsConstructor;
@@ -13,14 +10,11 @@ import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class MovieProcessor {
     private final DataExtractor dataExtractor;
     private final MovieCommandService movieCommandService;
-    private final WebDriverExecutor webDriverExecutor;
     private final StaffProcessor staffProcessor;
 
     @Transactional
@@ -36,8 +30,8 @@ public class MovieProcessor {
                 return movie;
             }
 
-            List<WebElement> staffElement = webDriverExecutor.getStaffElement(movieDetailPage, movieCode);
-            staffProcessor.processStaffInfo(staffElement, movieCode, targetDate);
+            StaffInfoDto staffInfoDto = dataExtractor.getStaffInfo(movieDetailPage, movieCode);
+            staffProcessor.processStaffInfo(staffInfoDto, movieCode, targetDate);
         } catch (ScrapingException e) {
             ScrapingExceptionDto exceptionDto = new ScrapingExceptionDto();
             if (movieInfoDto != null) {

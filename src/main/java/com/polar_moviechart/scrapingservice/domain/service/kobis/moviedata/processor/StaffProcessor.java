@@ -1,21 +1,16 @@
 package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.processor;
 
 import com.polar_moviechart.scrapingservice.domain.service.*;
-import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.DirectorInfoDto;
-import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.LeadActorInfoDto;
+import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.StaffInfoDto;
 import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.extractor.DataExtractor;
 import lombok.RequiredArgsConstructor;
-import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class StaffProcessor {
 
-    private final DataExtractor dataExtractor;
     private final DirectorQueryService directorQueryService;
     private final DirectorCommandService directorCommandService;
     private final LeadActorQueryService leadActorQueryService;
@@ -26,25 +21,26 @@ public class StaffProcessor {
     private final MovieLeadActorQueryService movieLeadActorQueryservice;
 
     @Transactional
-    public void processStaffInfo(List<WebElement> staffElement, int movieCode, String targetDate) {
-        List<DirectorInfoDto> directorsDto = dataExtractor.getDirectorsInfo(staffElement.get(0), targetDate);
-        for (DirectorInfoDto directorDto : directorsDto) {
-            if (!directorQueryService.isExists(directorDto.getCode())) {
-                directorCommandService.save(directorDto);
-            }
-            if (!movieDirectorQueryService.isExists(movieCode, directorDto.getCode())) {
-                movieDirectorCommandService.save(movieCode, directorDto.getCode());
-            }
+    public void processStaffInfo(StaffInfoDto staffInfoDto, int movieCode, String targetDate) {
+
+        if (staffInfoDto.isDirectorExists()) {
+            staffInfoDto.getDirectorInfoDtos().stream()
+                    .filter(directorDto -> !directorQueryService.isExists(directorDto.getCode()))
+                    .forEach(directorCommandService::save);
+
+            staffInfoDto.getDirectorInfoDtos().stream()
+                    .filter(directorDto -> !movieDirectorQueryService.isExists(movieCode, directorDto.getCode()))
+                    .forEach(directorDto -> movieDirectorCommandService.save(movieCode, directorDto.getCode()));
         }
 
-        List<LeadActorInfoDto> leadActorsDto = dataExtractor.getLeadActorsInfo(staffElement.get(1), targetDate);
-        for (LeadActorInfoDto leadActorDto : leadActorsDto) {
-            if (!leadActorQueryService.isExists(leadActorDto.getCode())) {
-                leadActorCommandService.save(leadActorDto);
-            }
-            if (!movieLeadActorQueryservice.isExists(movieCode, leadActorDto.getCode())) {
-                movieLeadActorCommandService.save(movieCode, leadActorDto.getCode());
-            }
+        if (staffInfoDto.isLeadactorExists()) {
+            staffInfoDto.getLeadActorInfoDtos().stream()
+                    .filter(leadActorDto -> !leadActorQueryService.isExists(leadActorDto.getCode()))
+                    .forEach(leadActorDto -> leadActorCommandService.save(leadActorDto));
+
+            staffInfoDto.getLeadActorInfoDtos().stream()
+                    .filter(leadActorDto -> !movieLeadActorQueryservice.isExists(movieCode, leadActorDto.getCode()))
+                    .forEach(leadActorDto -> movieLeadActorCommandService.save(movieCode, leadActorDto.getCode()));
         }
     }
 }

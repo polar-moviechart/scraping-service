@@ -1,8 +1,8 @@
 package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.extractor;
 
 import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.*;
-import com.polar_moviechart.scrapingservice.exception.ScrapingException;
 import lombok.RequiredArgsConstructor;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Component;
 
@@ -25,11 +25,20 @@ public class DataExtractor {
         return movieDailyStatsExtractor.getMovieDailyStatsInfo(columns);
     }
 
-    public List<DirectorInfoDto> getDirectorsInfo(WebElement directorsElement, String targetDate) {
-        return directorExtractor.getDirectorsInfo(directorsElement);
-    }
+    public StaffInfoDto getStaffInfo(WebElement movieDetailPage, Integer movieCode) {
+        // 코드 아이디로 감독, 배우 정보가 있는 staff 관련 태그 얻어내기
+        String staffId = movieCode + "_staff";
+        WebElement staffInfo = movieDetailPage.findElement(By.id(staffId));
+        WebElement descriptionInfo = staffInfo.findElement(By.cssSelector("dl.desc_info"));
 
-    public List<LeadActorInfoDto> getLeadActorsInfo(WebElement leadActorsElement, String targetDate) {
-        return leadActorExtractor.getLeadActorsInfo(leadActorsElement);
+        List<WebElement> staffElements = descriptionInfo.findElements(By.cssSelector("div"));
+
+        WebElement directorElement = descriptionInfo.findElement(By.cssSelector("div[id$='director']"));
+        List<DirectorInfoDto> directorsInfo = directorExtractor.getDirectorsInfo(directorElement);
+        if (staffElements.size() == 1) {
+            return new StaffInfoDto(directorsInfo, List.of());
+        }
+        List<LeadActorInfoDto> leadActorsInfo = leadActorExtractor.getLeadActorsInfo(staffElements.get(1));
+        return new StaffInfoDto(directorsInfo, leadActorsInfo);
     }
 }
