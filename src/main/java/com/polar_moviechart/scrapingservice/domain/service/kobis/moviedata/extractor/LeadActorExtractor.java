@@ -1,7 +1,7 @@
 package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.extractor;
 
 import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.LeadActorInfoDto;
-import com.polar_moviechart.scrapingservice.exception.ScrapingDataNotFoundException;
+import com.polar_moviechart.scrapingservice.exception.ScrapingException;
 import com.polar_moviechart.scrapingservice.utls.DataExtractUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -34,7 +34,7 @@ public class LeadActorExtractor {
                                 Integer.parseInt(leadActorCode),
                                 leadActorName);
                     } else {
-                        throw new ScrapingDataNotFoundException("주연 배우 스크래핑 중 문제 발생.");
+                        throw new ScrapingException("주연 배우 스크래핑 중 문제 발생.");
                     }
                 })
                 .collect(Collectors.toList());

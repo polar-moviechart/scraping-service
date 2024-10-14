@@ -1,7 +1,7 @@
 package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.extractor;
 
 import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.MovieDailyStatsDto;
-import com.polar_moviechart.scrapingservice.exception.ScrapingDataNotFoundException;
+import com.polar_moviechart.scrapingservice.exception.ScrapingException;
 import com.polar_moviechart.scrapingservice.utls.DataExtractUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -38,8 +38,8 @@ public class MovieDailyStatsExtractor {
                 return Integer.parseInt(matcher.group(1));
             }
         } catch (Exception e) {
-            throw new ScrapingDataNotFoundException("영화 코드 추출 중 예외 발생.", e);
+            throw new ScrapingException("영화 코드 추출 중 예외 발생.", e);
         }
-        throw new ScrapingDataNotFoundException("코드를 찾을 수 없습니다.");
+        throw new ScrapingException("코드를 찾을 수 없습니다.");
     }
 }
