@@ -20,15 +20,14 @@ public class MovieProcessor {
     @Transactional
     public Movie processNewMovie(WebElement movieDetailPage, MovieDailyStatsDto movieDailyStatsDto, String targetDate) {
         MovieInfoDto movieInfoDto = dataExtractor.getMovieInfo(movieDetailPage, movieDailyStatsDto);
-        int movieCode = movieInfoDto.getCode();
         Movie movie = movieCommandService.save(movieInfoDto);
         try {
             if (movie.getReleaseDate() == null && movie.getProductionYear() == null) {
                 return movie;
             }
-            StaffInfoDto staffInfoDto = dataExtractor.getStaffInfo(movieDetailPage, movieCode);
+            StaffInfoDto staffInfoDto = dataExtractor.getStaffInfo(movieDetailPage, movie.getCode());
             if (staffInfoDto != null) {
-                staffProcessor.processStaffInfo(staffInfoDto, movieCode, targetDate);
+                staffProcessor.processStaffInfo(staffInfoDto, movie.getCode(), targetDate);
             }
         } catch (Exception e) {
             ScrapingExceptionDto exceptionDto = new ScrapingExceptionDto();

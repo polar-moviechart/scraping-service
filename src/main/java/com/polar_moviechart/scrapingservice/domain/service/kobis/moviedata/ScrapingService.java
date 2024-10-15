@@ -41,12 +41,13 @@ public class ScrapingService {
     @Transactional
     private void processMovieRow(WebElement row, String targetDate) {
         List<WebElement> columnInfo = webDriverExecutor.getColumnInfo(row);
-        MovieDailyStatsDto movieDailyStatsDto = dataExtractor.getMovieDailyStatsInfo(columnInfo);
 
+        MovieDailyStatsDto movieDailyStatsDto = dataExtractor.getMovieDailyStatsInfo(columnInfo);
         Optional<Movie> movieOptional = movieRepository.findByCode(movieDailyStatsDto.getCode());
 
         Movie movie = movieOptional.orElseGet(() -> {
             WebElement movieDetailPage = webDriverExecutor.moveToMovieDetailPage(row);
+
             Movie createdMovie = movieProcessor.processNewMovie(movieDetailPage, movieDailyStatsDto, targetDate);
             movieDetailPage.findElement(By.cssSelector("div.hd_layer > a.close")).click();
             return createdMovie;

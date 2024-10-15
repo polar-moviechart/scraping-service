@@ -29,19 +29,19 @@ public class DataExtractor {
         // 코드 아이디로 감독, 배우 정보가 있는 staff 관련 태그 얻어내기
         String staffId = movieCode + "_staff";
         WebElement staffInfo = movieDetailPage.findElement(By.id(staffId));
-
         List<WebElement> descriptionInfo = staffInfo.findElements(By.cssSelector("dl.desc_info"));
         if (descriptionInfo.size() == 0) {
             return null;
         }
         WebElement staffTemplate = descriptionInfo.get(0);
 
-        List<WebElement> staffElements = staffTemplate.findElements(By.cssSelector("div"));
         WebElement directorElement = staffTemplate.findElement(By.cssSelector("div[id$='director']"));
         List<DirectorInfoDto> directorsInfo = directorExtractor.getDirectorsInfo(directorElement);
+        List<WebElement> staffElements = staffTemplate.findElements(By.cssSelector("div"));
         if (staffElements.size() == 1) {
             return new StaffInfoDto(directorsInfo, List.of());
         }
+
         List<LeadActorInfoDto> leadActorsInfo = leadActorExtractor.getLeadActorsInfo(staffElements.get(1));
         return new StaffInfoDto(directorsInfo, leadActorsInfo);
     }
