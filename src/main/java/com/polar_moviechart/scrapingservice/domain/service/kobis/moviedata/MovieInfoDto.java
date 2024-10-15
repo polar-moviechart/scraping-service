@@ -4,6 +4,8 @@ import com.polar_moviechart.scrapingservice.domain.entity.Movie;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 public class MovieInfoDto {
@@ -13,6 +15,7 @@ public class MovieInfoDto {
     private final LocalDate releaseDate;
     private final Integer productionYear;
     private final String synopsys;
+    private final List<String> imgUrls = new ArrayList<>();
 
     public MovieInfoDto(int code, String title, String details, LocalDate releaseDate, Integer productionYear, String synopsys) {
         this.code = code;
@@ -32,5 +35,9 @@ public class MovieInfoDto {
                 productionYear,
                 synopsys
         );
+    }
+
+    public void addImgUrl(String imageUrl) {
+        this.imgUrls.add(imageUrl);
     }
 }

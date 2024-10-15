@@ -29,8 +29,10 @@ public class ScrapingScheduler {
             }
         } catch (ScrapingException e) {
             logger.info("=== 스크래핑 도중 예외 발생 ===");
-            logger.info("=== 날짜: {} ===", e.getExceptionDto().getTargetDate());
-            logger.info("=== 영화명: {} ===", e.getExceptionDto().getMovieName());
+            if (e.getExceptionDto() != null) {
+                logger.info("=== 날짜: {} ===", e.getExceptionDto().getTargetDate());
+                logger.info("=== 영화명: {} ===", e.getExceptionDto().getMovieName());
+            }
             e.printStackTrace();
         }
     }

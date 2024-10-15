@@ -39,6 +39,10 @@ public class MovieExtractor {
 
             Map<String, String> dataMap = getMetadata(movieInfo);
             movieInfoDto = getMovieInfoDto(title, synopsys, dataMap);
+
+            WebElement imageElement = movieDetailPage.findElement(By.cssSelector("a.fl.thumb img"));
+            String imageUrl = imageElement.getAttribute("src");
+            movieInfoDto.addImgUrl(imageUrl);
         } catch (Exception e) {
             ScrapingExceptionDto exceptionDto = new ScrapingExceptionDto();
             exceptionDto.setMovieName(title);
