@@ -1,4 +1,4 @@
-package com.polar_moviechart.scrapingservice.utls;
+package com.polar_moviechart.scrapingservice.utils;
 
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;

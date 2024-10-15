@@ -1,6 +1,5 @@
-package com.polar_moviechart.scrapingservice.utls;
+package com.polar_moviechart.scrapingservice.utils;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

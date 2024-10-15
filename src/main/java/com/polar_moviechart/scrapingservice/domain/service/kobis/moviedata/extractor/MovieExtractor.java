@@ -4,7 +4,7 @@ import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.Movie
 import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.MovieInfoDto;
 import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.ScrapingExceptionDto;
 import com.polar_moviechart.scrapingservice.exception.ScrapingException;
-import com.polar_moviechart.scrapingservice.utls.DataExtractUtils;
+import com.polar_moviechart.scrapingservice.utils.DataExtractUtils;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;

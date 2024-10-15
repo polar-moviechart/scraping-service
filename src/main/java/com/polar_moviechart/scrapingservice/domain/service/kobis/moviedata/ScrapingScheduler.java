@@ -1,7 +1,7 @@
 package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata;
 
 import com.polar_moviechart.scrapingservice.exception.ScrapingException;
-import com.polar_moviechart.scrapingservice.utls.DataExtractUtils;
+import com.polar_moviechart.scrapingservice.utils.DataExtractUtils;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

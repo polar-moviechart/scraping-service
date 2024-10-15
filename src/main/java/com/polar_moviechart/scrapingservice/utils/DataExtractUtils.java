@@ -1,4 +1,4 @@
-package com.polar_moviechart.scrapingservice.utls;
+package com.polar_moviechart.scrapingservice.utils;
 
 import java.time.LocalDate;
 import java.util.regex.Pattern;

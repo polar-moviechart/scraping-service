@@ -1,7 +1,7 @@
 package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata;
 
 import com.polar_moviechart.scrapingservice.exception.ScrapingException;
-import com.polar_moviechart.scrapingservice.utls.WebDriverExecutorUtils;
+import com.polar_moviechart.scrapingservice.utils.WebDriverExecutorUtils;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
