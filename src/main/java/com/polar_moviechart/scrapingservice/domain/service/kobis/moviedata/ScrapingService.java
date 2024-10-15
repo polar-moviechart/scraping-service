@@ -6,9 +6,11 @@ import com.polar_moviechart.scrapingservice.domain.repository.MovieRepository;
 import com.polar_moviechart.scrapingservice.domain.service.*;
 import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.extractor.DataExtractor;
 import com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata.processor.MovieProcessor;
+import com.polar_moviechart.scrapingservice.exception.ScrapingException;
 import com.polar_moviechart.scrapingservice.utls.DataExtractUtils;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.By;
+import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +31,18 @@ public class ScrapingService {
 
     @Transactional
     public void doScrape(String targetDate) {
-        webDriverExecutor.navigateTo(targetDate);
+        for (int tryCnt = 1; tryCnt <= 4; tryCnt++) {
+            try {
+                webDriverExecutor.navigateTo(targetDate);
+                break;
+            } catch (UnhandledAlertException e) {
+                webDriverExecutor.navigateMainPage();
+                if (tryCnt > 3) {
+                    throw new ScrapingException(e);
+                }
+            }
+        }
+
         preparePage();
 
         List<WebElement> movieRows = webDriverExecutor.getMovieRows(targetDate);
