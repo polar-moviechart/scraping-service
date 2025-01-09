@@ -24,6 +24,9 @@ public class Movie {
     @Column(nullable = false)
     private final int code;
 
+    @Column(nullable = true)
+    private String thumbnail;
+
     @Column(nullable = false)
     private final String title;
 
@@ -47,6 +50,10 @@ public class Movie {
 
     @LastModifiedDate
     private LocalDateTime modifiedAt;
+
+    public void setThumbnail(String thumbnailPath) {
+        this.thumbnail = thumbnailPath;
+    }
 
     // 기본 생성자 추가
     public Movie() {
