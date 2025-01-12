@@ -1,4 +1,7 @@
 spring:
+  profiles:
+    include:
+      aws, mysql
   application:
     name: scraping-service
   datasource:
