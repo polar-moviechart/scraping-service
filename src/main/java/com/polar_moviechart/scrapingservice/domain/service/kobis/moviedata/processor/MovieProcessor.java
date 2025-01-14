@@ -37,7 +37,9 @@ public class MovieProcessor {
     @Transactional
     public Movie processNewMovie(WebElement movieDetailPage, MovieDailyStatsDto movieDailyStatsDto, String targetDate) {
         MovieInfoDto movieInfoDto = dataExtractor.getMovieInfo(movieDetailPage, movieDailyStatsDto);
-
+        if (movieInfoDto == null) {
+            return null;
+        }
         Movie movie = movieCommandService.save(movieInfoDto);
         String s3Path = downloadImage(movieInfoDto);
         movie.setThumbnail(s3Path);
@@ -72,10 +74,10 @@ public class MovieProcessor {
 
     private String putImageToS3(MovieInfoDto movieInfoDto, URL url) throws IOException {
         String originalFileName = "thumbnail.jpg";
-        String newFileName = appendRandomNumberToFileName(originalFileName);
+//        String newFileName = appendRandomNumberToFileName(originalFileName);
 
         Integer movieCode = movieInfoDto.getCode();  // movieCode 가져오기
-        String s3Path = String.format("movies/%s/%s", movieCode, newFileName);
+        String s3Path = String.format("movies/%s/%s", movieCode, originalFileName);
 
         InputStream fileInputStream = url.openStream();
 

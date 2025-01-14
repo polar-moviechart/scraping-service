@@ -46,7 +46,8 @@ public class MovieExtractor {
         } catch (Exception e) {
             ScrapingExceptionDto exceptionDto = new ScrapingExceptionDto();
             exceptionDto.setMovieName(title);
-            throw new ScrapingException(e, exceptionDto);
+            return null;
+//            throw new ScrapingException(e, exceptionDto);
         }
         return movieInfoDto;
     }
