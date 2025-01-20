@@ -1,6 +1,8 @@
 package com.polar_moviechart.scrapingservice.domain.service.kobis.moviedata;
 
 import com.polar_moviechart.scrapingservice.domain.entity.Movie;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
@@ -8,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Builder
+@AllArgsConstructor
 public class MovieInfoDto {
     private final int code;
     private final String title;
@@ -16,28 +20,25 @@ public class MovieInfoDto {
     private final Integer productionYear;
     private final String synopsys;
     private final List<String> imgUrls = new ArrayList<>();
-
-    public MovieInfoDto(int code, String title, String details, LocalDate releaseDate, Integer productionYear, String synopsys) {
-        this.code = code;
-        this.title = title;
-        this.details = details;
-        this.releaseDate = releaseDate;
-        this.productionYear = productionYear;
-        this.synopsys = synopsys;
-    }
+    private boolean isSuccess;
 
     public Movie toEntity() {
-        return new Movie(
-                code,
-                title,
-                details,
-                releaseDate,
-                productionYear,
-                synopsys
-        );
+        return Movie.builder()
+                .code(code)
+                .title(title)
+                .details(details)
+                .releaseDate(releaseDate)
+                .productionYear(productionYear)
+                .synopsys(synopsys)
+                .isSuccess(isSuccess)
+                .build();
     }
 
     public void addImgUrl(String imageUrl) {
         this.imgUrls.add(imageUrl);
+    }
+
+    public void setIsSuccess(boolean isSuccess) {
+        this.isSuccess = isSuccess;
     }
 }

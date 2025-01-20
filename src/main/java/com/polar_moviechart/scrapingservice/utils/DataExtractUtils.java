@@ -21,6 +21,13 @@ public class DataExtractUtils {
         return Integer.parseInt(numberString.replace(",", ""));
     }
 
+    public static long convertToLong(String numberString) {
+        if (numberString == null || numberString.isEmpty()) {
+            return 0;
+        }
+        return Long.parseLong(numberString.replace(",", ""));
+    }
+
     public static LocalDate convertToLocalDate(String targetDate) {
         String[] dateElement = targetDate.split("-");
         return LocalDate.of(

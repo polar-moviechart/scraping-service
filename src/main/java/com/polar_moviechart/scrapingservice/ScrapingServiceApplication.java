@@ -22,8 +22,8 @@ public class ScrapingServiceApplication {
 	@Bean
 	public CommandLineRunner run() {
 		return (args) -> {
-			String startDate = "2004-01-01";
-			String endData = "2004-01-02";
+			String startDate = "2024-12-06";
+			String endData = "2024-12-01";
 			scrapingScheduler.doScrape(startDate, endData);
 		};
 	}

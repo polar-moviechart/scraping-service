@@ -31,7 +31,7 @@ public class DataExtractor {
         WebElement staffInfo = movieDetailPage.findElement(By.id(staffId));
         List<WebElement> descriptionInfo = staffInfo.findElements(By.cssSelector("dl.desc_info"));
         if (descriptionInfo.size() == 0) {
-            return null;
+            return new StaffInfoDto(List.of(), List.of());
         }
         WebElement staffTemplate = descriptionInfo.get(0);
 

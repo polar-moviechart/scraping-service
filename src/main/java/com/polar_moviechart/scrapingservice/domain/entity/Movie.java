@@ -1,8 +1,7 @@
 package com.polar_moviechart.scrapingservice.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -14,7 +13,9 @@ import java.util.List;
 @Getter
 @Entity
 @Table(name = "movies")
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,28 +23,31 @@ public class Movie {
     private Long id;
 
     @Column(nullable = false)
-    private final int code;
+    private int code;
 
     @Column(nullable = true)
     private String thumbnail;
 
     @Column(nullable = false)
-    private final String title;
-
-    @Column(nullable = false)
-    private final String details;
+    private String title;
 
     @Column
-    private final LocalDate releaseDate;
+    private String details;
 
     @Column
-    private final Integer productionYear;
+    private LocalDate releaseDate;
 
-    @Column(nullable = false)
-    private final String synopsys;
+    @Column
+    private Integer productionYear;
+
+    @Column
+    private String synopsys;
 
     @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY)
-    private final List<MovieDailyStats> stats = new ArrayList<>();
+    private List<MovieDailyStats> stats = new ArrayList<>();
+
+    @Column(name = "is_success", nullable = false)
+    private Boolean isSuccess;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -55,13 +59,15 @@ public class Movie {
         this.thumbnail = thumbnailPath;
     }
 
-    // 기본 생성자 추가
-    public Movie() {
-        this.code = 0;
-        this.title = "";
-        this.details = "";
-        this.releaseDate = LocalDate.now();
-        this.productionYear = 0;
-        this.synopsys = "";
+    public boolean isSuccess() {
+        return this.isSuccess;
+    }
+
+    public List<MovieDailyStats> getStats() {
+        if (this.stats == null) {
+            return new ArrayList<>();
+        } else {
+            return this.stats;
+        }
     }
 }

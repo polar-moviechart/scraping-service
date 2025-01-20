@@ -37,10 +37,11 @@ public class MovieProcessor {
     @Transactional
     public Movie processNewMovie(WebElement movieDetailPage, MovieDailyStatsDto movieDailyStatsDto, String targetDate) {
         MovieInfoDto movieInfoDto = dataExtractor.getMovieInfo(movieDetailPage, movieDailyStatsDto);
-        if (movieInfoDto == null) {
-            return null;
-        }
+
         Movie movie = movieCommandService.save(movieInfoDto);
+        if (!movie.isSuccess()) {
+            return movie;
+        }
         String s3Path = downloadImage(movieInfoDto);
         movie.setThumbnail(s3Path);
         try {
@@ -48,9 +49,7 @@ public class MovieProcessor {
                 return movie;
             }
             StaffInfoDto staffInfoDto = dataExtractor.getStaffInfo(movieDetailPage, movie.getCode());
-            if (staffInfoDto != null) {
-                staffProcessor.processStaffInfo(staffInfoDto, movie.getCode(), targetDate);
-            }
+            staffProcessor.processStaffInfo(staffInfoDto, movie.getCode(), targetDate);
         } catch (Exception e) {
             ScrapingExceptionDto exceptionDto = new ScrapingExceptionDto();
             exceptionDto.setMovieName(movie.getTitle());

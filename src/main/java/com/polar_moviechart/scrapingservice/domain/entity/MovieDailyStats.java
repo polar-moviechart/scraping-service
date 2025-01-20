@@ -20,7 +20,7 @@ public class MovieDailyStats {
     private final int ranking;
 
     @Column(nullable = false)
-    private final int revenue;
+    private final long revenue;
 
     @Column(nullable = false)
     private final int audience;
@@ -45,7 +45,7 @@ public class MovieDailyStats {
         }
     }
 
-    public MovieDailyStats(int ranking, int revenue, LocalDate date, int audience) {
+    public MovieDailyStats(int ranking, long revenue, LocalDate date, int audience) {
         this.ranking = ranking;
         this.revenue = revenue;
         this.date = date;

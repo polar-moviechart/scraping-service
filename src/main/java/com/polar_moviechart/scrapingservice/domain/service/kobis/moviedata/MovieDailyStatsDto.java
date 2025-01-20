@@ -11,10 +11,10 @@ public class MovieDailyStatsDto {
     private final int code;
     private final int ranking;
     private final String title;
-    private final int revenue;
+    private final long revenue;
     private final int audience;
 
-    public MovieDailyStatsDto(int code, int ranking, String title, int revenue, int audience) {
+    public MovieDailyStatsDto(int code, int ranking, String title, long revenue, int audience) {
         this.code = code;
         this.ranking = ranking;
         this.title = title;

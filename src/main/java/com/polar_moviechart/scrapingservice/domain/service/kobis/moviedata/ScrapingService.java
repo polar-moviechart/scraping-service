@@ -56,27 +56,38 @@ public class ScrapingService {
         List<WebElement> columnInfo = webDriverExecutor.getColumnInfo(row);
 
         MovieDailyStatsDto movieDailyStatsDto = dataExtractor.getMovieDailyStatsInfo(columnInfo);
-        Optional<Movie> movieOptional = movieRepository.findByCode(movieDailyStatsDto.getCode());
-
-        Movie movie = movieOptional.orElseGet(() -> {
-            WebElement movieDetailPage = webDriverExecutor.moveToMovieDetailPage(row);
-            if (movieDetailPage == null) {
-                return null;
-            }
-
-            Movie createdMovie = movieProcessor.processNewMovie(movieDetailPage, movieDailyStatsDto, targetDate);
-            movieDetailPage.findElement(By.cssSelector("div.hd_layer > a.close")).click();
-            return createdMovie;
-        });
-
-        if (movie == null) {
+        if (movieDailyStatsDto == null) {
             return;
         }
-        boolean existsByCodeAndDate = movieDailyStatsQueryService.isExists(movieDailyStatsDto.getCode(), DataExtractUtils.convertToLocalDate(targetDate));
-        if (!existsByCodeAndDate) {
-            MovieDailyStats movieDailyStats = movieDailyStatsDto.toEntity(DataExtractUtils.convertToLocalDate(targetDate));
-            movieDailyStats.setMovie(movie);
-            movieDailyStatsCommandService.save(movieDailyStats);
+        Optional<Movie> movieOptional = movieRepository.findByCode(movieDailyStatsDto.getCode());
+        try {
+            Movie movie = movieOptional.orElseGet(() -> {
+                WebElement movieDetailPage = webDriverExecutor.moveToMovieDetailPage(row);
+                if (movieDetailPage == null) {
+                    Movie failedMovie = Movie.builder()
+                            .title(movieDailyStatsDto.getTitle())
+                            .code(movieDailyStatsDto.getCode())
+                            .isSuccess(false)
+                            .build();
+                    return movieRepository.save(failedMovie);
+                }
+                Movie createdMovie = movieProcessor.processNewMovie(movieDetailPage, movieDailyStatsDto, targetDate);
+                movieDetailPage.findElement(By.cssSelector("div.hd_layer > a.close")).click();
+                return createdMovie;
+            });
+
+            boolean existsByCodeAndDate = movieDailyStatsQueryService.isExists(movieDailyStatsDto.getCode(), DataExtractUtils.convertToLocalDate(targetDate));
+            if (!existsByCodeAndDate) {
+                MovieDailyStats movieDailyStats = movieDailyStatsDto.toEntity(DataExtractUtils.convertToLocalDate(targetDate));
+                movieDailyStats.setMovie(movie);
+                movieDailyStatsCommandService.save(movieDailyStats);
+            }
+        } catch (Exception e) {
+            ScrapingExceptionDto exceptionDto = ScrapingExceptionDto.builder()
+                    .targetDate(targetDate)
+                    .movieName(movieDailyStatsDto.getTitle())
+                    .build();
+            throw new ScrapingException(e, exceptionDto);
         }
     }
 

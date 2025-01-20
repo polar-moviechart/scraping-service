@@ -20,12 +20,15 @@ public class MovieDailyStatsExtractor {
         MovieDailyStatsDto dailyStatsDto = null;
         try {
             int rank = DataExtractUtils.convertToInt(columns.get(0).getText());
-            int sales = DataExtractUtils.convertToInt(columns.get(3).getText());
+            long sales = DataExtractUtils.convertToLong(columns.get(3).getText());
             int audience = DataExtractUtils.convertToInt(columns.get(7).getText());
 
             WebElement linkElement = columns.get(1).findElement(By.cssSelector("a"));
             String onClickValue = linkElement.getAttribute("onClick");
-            int code = extractMovieCode(onClickValue);
+            Integer code = extractMovieCode(onClickValue);
+            if (code == null) {
+                return null;
+            }
 
             dailyStatsDto = new MovieDailyStatsDto(code, rank, title, sales, audience);
         } catch (Exception e) {
@@ -37,7 +40,7 @@ public class MovieDailyStatsExtractor {
         return dailyStatsDto;
     }
 
-    private int extractMovieCode(String onClickValue) {
+    private Integer extractMovieCode(String onClickValue) {
         // 정규 표현식 패턴
         Pattern pattern = Pattern.compile("mstView\\('movie','(\\d+)'\\)");
         Matcher matcher = pattern.matcher(onClickValue);
@@ -47,7 +50,8 @@ public class MovieDailyStatsExtractor {
             matcher.find();
             return Integer.parseInt(matcher.group(1));
         } catch (Exception e) {
-            throw new ScrapingException("영화 코드 추출 중 예외 발생.", e);
+            return null;
+//            throw new ScrapingException("영화 코드 추출 중 예외 발생.", e);
         }
     }
 }

@@ -22,7 +22,8 @@ public class MovieExtractor {
 
     public MovieInfoDto getMovieInfo(WebElement movieDetailPage, MovieDailyStatsDto movieDailyStatsDto) {
         String title = movieDailyStatsDto.getTitle();
-        MovieInfoDto movieInfoDto;
+        int code = movieDailyStatsDto.getCode();
+        MovieInfoDto movieInfoDto = null;
         try {
             // 영화를 클릭하면 나오는 상세 정보 템플릿에서 영화 메타데이터 가져오기
             String titleEnglish = movieDetailPage.findElement(By.cssSelector("div.hd_layer > div"))
@@ -43,10 +44,15 @@ public class MovieExtractor {
             WebElement imageElement = movieDetailPage.findElement(By.cssSelector("a.fl.thumb img"));
             String imageUrl = imageElement.getAttribute("src");
             movieInfoDto.addImgUrl(imageUrl);
+            movieInfoDto.setIsSuccess(true);
         } catch (Exception e) {
-            ScrapingExceptionDto exceptionDto = new ScrapingExceptionDto();
-            exceptionDto.setMovieName(title);
-            return null;
+            return MovieInfoDto.builder()
+                    .title(title)
+                    .code(code)
+                    .isSuccess(false)
+                    .build();
+//            ScrapingExceptionDto exceptionDto = new ScrapingExceptionDto();
+//            exceptionDto.setMovieName(title);
 //            throw new ScrapingException(e, exceptionDto);
         }
         return movieInfoDto;
@@ -66,15 +72,14 @@ public class MovieExtractor {
                 .map(this::convertToInteger)
                 .orElse(null);
 
-        movieInfoDto = new MovieInfoDto (
-                code,
-                title,
-                details,
-                releaseDate,
-                productionYear,
-                synopsys
-        );
-        return movieInfoDto;
+        return MovieInfoDto.builder()
+                .code(code)
+                .title(title)
+                .details(details)
+                .releaseDate(releaseDate)
+                .productionYear(productionYear)
+                .synopsys(synopsys)
+                .build();
     }
 
     private Map<String, String> getMetadata(WebElement movieInfo) {
