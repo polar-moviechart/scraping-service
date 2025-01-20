@@ -60,12 +60,18 @@ public class ScrapingService {
 
         Movie movie = movieOptional.orElseGet(() -> {
             WebElement movieDetailPage = webDriverExecutor.moveToMovieDetailPage(row);
+            if (movieDetailPage == null) {
+                return null;
+            }
 
             Movie createdMovie = movieProcessor.processNewMovie(movieDetailPage, movieDailyStatsDto, targetDate);
             movieDetailPage.findElement(By.cssSelector("div.hd_layer > a.close")).click();
             return createdMovie;
         });
 
+        if (movie == null) {
+            return;
+        }
         boolean existsByCodeAndDate = movieDailyStatsQueryService.isExists(movieDailyStatsDto.getCode(), DataExtractUtils.convertToLocalDate(targetDate));
         if (!existsByCodeAndDate) {
             MovieDailyStats movieDailyStats = movieDailyStatsDto.toEntity(DataExtractUtils.convertToLocalDate(targetDate));

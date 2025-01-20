@@ -29,6 +29,7 @@ public class ScrapingException extends RuntimeException {
 
     public ScrapingException(Throwable cause, ScrapingExceptionDto exceptionDto) {
         super(msg, cause);
+        cause.printStackTrace();
         this.exceptionDto = exceptionDto;
     }
 

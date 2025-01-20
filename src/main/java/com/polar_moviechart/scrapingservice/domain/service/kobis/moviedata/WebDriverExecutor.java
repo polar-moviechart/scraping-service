@@ -7,8 +7,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.List;
 
 @Service
@@ -58,7 +61,16 @@ public class WebDriverExecutor {
     public WebElement moveToMovieDetailPage(WebElement row) {
         WebElement secondTd = row.findElements(By.tagName("td")).get(1);
         WebElement movieInfoLink = secondTd.findElement(By.cssSelector("span.ellip.per90 > a"));
-        movieInfoLink.click();
+
+        // 명시적 대기 (클릭이 가능할 때 까지 대기)
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.elementToBeClickable(movieInfoLink));
+
+        try {
+            movieInfoLink.click();
+        } catch (Exception e) {
+            return null;
+        }
         return driver.findElement(By.cssSelector("div[tabindex='-1']"));
     }
 
